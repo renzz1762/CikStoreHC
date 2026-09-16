@@ -102,7 +102,7 @@ function getPromoPriceFor(product){
     return sitePromo.priceStr;
   }
   if(sitePromo.scope === "category" && sitePromo.target === product.category) return sitePromo.priceStr;
-  if(sitePromo.scope === "product" && sitePromo.target === slugifyKey(product.name)) return sitePromo.priceStr;
+  if(sitePromo.scope === "product" && sitePromo.target === (product.usn || slugifyKey(product.name))) return sitePromo.priceStr;
   return null;
 }
 
@@ -192,7 +192,7 @@ async function loadComingSoon(){
 }
 
 function getComingSoonInfo(product){
-  const key = slugifyKey(product.name);
+  const key = product.usn || slugifyKey(product.name);
   const releaseAt = comingSoonMap[key];
   if(!releaseAt) return null;
   if(releaseAt.getTime() <= Date.now()) return null; // waktunya udah lewat, anggap normal

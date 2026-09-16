@@ -17,15 +17,21 @@
    Status coming soon & jam/tanggal rilis produk DIATUR DARI SERVER
    (Environment Variables di Vercel), BUKAN di file ini.
 
-   Supaya server tahu produk mana yang dimaksud, nama produk
-   otomatis diubah jadi "KEY" dengan aturan:
-     - huruf besar semua
-     - spasi & simbol jadi underscore "_"
-   Contoh: nama produk "Overhead Kit" -> KEY = OVERHEAD_KIT
+   Supaya server tahu produk mana yang dimaksud, tiap produk punya
+   "KEY". Ada 2 cara:
+
+   1) CARA GAMPANG (disaranin) — isi field "usn" di objek produknya,
+      bebas mau nulis apa aja (huruf besar semua, underscore), itu
+      langsung jadi KEY-nya. Gak perlu mikirin auto-convert nama lagi.
+        usn: "HANGOUT_KIT_V2"
+
+   2) Kalau field "usn" DIKOSONGIN / gak ditulis, KEY otomatis dibikin
+      dari nama produk: huruf besar semua, spasi & simbol jadi "_".
+      Contoh: nama produk "Overhead Kit" -> KEY = OVERHEAD_KIT
 
    Di dashboard Vercel -> Project -> Settings -> Environment Variables,
-   tambahin:
-     COMINGSOON_PRODUCT_OVERHEAD_KIT = 17-08-2026 12:00
+   tambahin (KEY-nya HARUS SAMA PERSIS kayak "usn" di atas):
+     COMINGSOON_PRODUCT_HANGOUT_KIT_V2 = 17-08-2026 12:00
 
    Format value WAJIB: DD-MM-YYYY HH:mm (jam pakai WIB / UTC+7)
    Contoh lain: 05-01-2027 09:30
@@ -105,6 +111,7 @@ const PRODUCTS = [
     // Set env var COMINGSOON_PRODUCT_OVERHEAD_KIT di Netlify buat nyoba.
     // Kalau produknya udah gak "coming soon" lagi / gak dipake, hapus aja objek ini.
     name: "Hangout Kit V2",
+    usn: "HANGOUT_KIT_V2",
     desc: "HANGOUT KIT V2 — SEGERA RILIS, PANTENG TERUS YAWH",
     price: "Rp 15.000",
     category: "bahan_map",
