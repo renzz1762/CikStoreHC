@@ -86,11 +86,21 @@ function slugifyKey(name){
     .replace(/^_+|_+$/g, "");
 }
 
+// Kategori yang DIKECUALIKAN dari promo umum (KODE_PROMO / HARGA_PROMO).
+// Produk di kategori ini CUMA bisa kena promo lewat kode promo khusus
+// kategori/produk-nya sendiri (CODE_PROMO_<KEY>), gak ikut kena walau
+// orang masukin kode promo umum. Tambahin nama kategori lain di sini
+// kalau perlu (harus sama persis kayak field "category" di product.js).
+const EXCLUDE_FROM_ALL_PROMO = ["bahan_map"];
+
 // Cek promo mana yang berlaku buat 1 produk tertentu. Return string harga
 // promo (misal "Rp 10.000") kalau berlaku, atau null kalau nggak.
 function getPromoPriceFor(product){
   if(!sitePromo) return null;
-  if(sitePromo.scope === "all") return sitePromo.priceStr;
+  if(sitePromo.scope === "all"){
+    if(EXCLUDE_FROM_ALL_PROMO.includes(product.category)) return null;
+    return sitePromo.priceStr;
+  }
   if(sitePromo.scope === "category" && sitePromo.target === product.category) return sitePromo.priceStr;
   if(sitePromo.scope === "product" && sitePromo.target === slugifyKey(product.name)) return sitePromo.priceStr;
   return null;

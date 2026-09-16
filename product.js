@@ -15,7 +15,7 @@
    FITUR "COMING SOON" (produk belum rilis)
    ============================================================
    Status coming soon & jam/tanggal rilis produk DIATUR DARI SERVER
-   (Environment Variables di Netlify), BUKAN di file ini.
+   (Environment Variables di Vercel), BUKAN di file ini.
 
    Supaya server tahu produk mana yang dimaksud, nama produk
    otomatis diubah jadi "KEY" dengan aturan:
@@ -23,7 +23,7 @@
      - spasi & simbol jadi underscore "_"
    Contoh: nama produk "Overhead Kit" -> KEY = OVERHEAD_KIT
 
-   Di dashboard Netlify -> Site configuration -> Environment variables,
+   Di dashboard Vercel -> Project -> Settings -> Environment Variables,
    tambahin:
      COMINGSOON_PRODUCT_OVERHEAD_KIT = 17-08-2026 12:00
 
@@ -36,14 +36,19 @@
    Begitu waktunya lewat, overlay otomatis hilang sendiri (gak perlu
    refresh manual / edit apa-apa lagi).
 
-   Kalau env var-nya dihapus dari Netlify, produk balik normal lagi.
+   PENTING: abis nambah/ubah/hapus env var di Vercel, WAJIB redeploy
+   dulu (Deployments -> titik tiga di deployment terakhir -> Redeploy),
+   soalnya env var baru gak otomatis kepakai di deployment yang lama.
+
+   Kalau env var-nya dihapus dari Vercel, produk balik normal lagi
+   (abis redeploy).
    ============================================================
 
    ============================================================
    KODE PROMO KHUSUS PER-KATEGORI / PER-PRODUK
    ============================================================
    Selain kode promo umum (KODE_PROMO / HARGA_PROMO, diatur di
-   bawah ini juga lewat Netlify, berlaku ke SEMUA produk), sekarang
+   bawah ini juga lewat Vercel, berlaku ke SEMUA produk), sekarang
    bisa juga bikin kode promo yang CUMA berlaku buat:
 
    A) satu KATEGORI tertentu, contoh kategori "BAHAN MAP":
@@ -57,7 +62,12 @@
         HARGA_PROMO_OVERHEAD_KIT = (harga promonya)
       -> cuma berlaku buat produk "Overhead Kit" doang
 
-   Semua env var ini ditambahin di dashboard Netlify, bisa berapa
+   CATATAN: kategori "bahan_map" udah di-set supaya DIKECUALIKAN dari
+   promo umum (lihat EXCLUDE_FROM_ALL_PROMO di main.js) — jadi produk
+   kategori ini CUMA bisa dapet promo lewat CODE_PROMO_BAHAN_MAP di
+   atas, gak ikut kepotong kalau orang pake kode promo umum.
+
+   Semua env var ini ditambahin di dashboard Vercel, bisa berapa
    pun banyaknya, gak perlu edit kode sama sekali.
    ============================================================
 */
