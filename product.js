@@ -106,6 +106,19 @@ const PRODUCTS = [
       "File rapi, gampang di-custom ulang"
     ]
   },
+  {
+    name: "COLORING HD/RUMUS HD [AM]",
+    desc: "COLORING HD / CC HD - SIMPLE DAN BAGUS",
+    price: "Rp 5.000",
+    category: "CC",
+    img: "PRODUCT/Cchd.png",
+    isNew: true,
+    features: [
+      "Kit lengkap siap pakai",
+      "Tampilan simpel dan ringan",
+      "File rapi, gampang di-custom ulang"
+    ]
+  },
 ];
 
 // Biar file ini juga bisa dipakai (require) dari Netlify Function kalau perlu.

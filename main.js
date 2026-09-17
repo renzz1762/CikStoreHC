@@ -140,7 +140,7 @@ function handleImgError(imgEl){
   imgEl.outerHTML = fallbackIcon;
 }
 
-const CATEGORY_LABELS = { script: "Script", bahan: "Bahan", bahan_map: "BAHAN MAP", kit: "KIT" };
+const CATEGORY_LABELS = { script: "Script", bahan: "CC", bahan_map: "BAHAN MAP", kit: "KIT" };
 
 /* ============================================================
    COMING SOON — status & jam rilis diambil dari Netlify Function,
