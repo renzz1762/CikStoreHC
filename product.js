@@ -15,23 +15,17 @@
    FITUR "COMING SOON" (produk belum rilis)
    ============================================================
    Status coming soon & jam/tanggal rilis produk DIATUR DARI SERVER
-   (Environment Variables di Vercel), BUKAN di file ini.
+   (Environment Variables di Netlify), BUKAN di file ini.
 
-   Supaya server tahu produk mana yang dimaksud, tiap produk punya
-   "KEY". Ada 2 cara:
+   Supaya server tahu produk mana yang dimaksud, nama produk
+   otomatis diubah jadi "KEY" dengan aturan:
+     - huruf besar semua
+     - spasi & simbol jadi underscore "_"
+   Contoh: nama produk "Overhead Kit" -> KEY = OVERHEAD_KIT
 
-   1) CARA GAMPANG (disaranin) — isi field "usn" di objek produknya,
-      bebas mau nulis apa aja (huruf besar semua, underscore), itu
-      langsung jadi KEY-nya. Gak perlu mikirin auto-convert nama lagi.
-        usn: "HANGOUT_KIT_V2"
-
-   2) Kalau field "usn" DIKOSONGIN / gak ditulis, KEY otomatis dibikin
-      dari nama produk: huruf besar semua, spasi & simbol jadi "_".
-      Contoh: nama produk "Overhead Kit" -> KEY = OVERHEAD_KIT
-
-   Di dashboard Vercel -> Project -> Settings -> Environment Variables,
-   tambahin (KEY-nya HARUS SAMA PERSIS kayak "usn" di atas):
-     COMINGSOON_PRODUCT_HANGOUT_KIT_V2 = 17-08-2026 12:00
+   Di dashboard Netlify -> Site configuration -> Environment variables,
+   tambahin:
+     COMINGSOON_PRODUCT_OVERHEAD_KIT = 17-08-2026 12:00
 
    Format value WAJIB: DD-MM-YYYY HH:mm (jam pakai WIB / UTC+7)
    Contoh lain: 05-01-2027 09:30
@@ -42,19 +36,14 @@
    Begitu waktunya lewat, overlay otomatis hilang sendiri (gak perlu
    refresh manual / edit apa-apa lagi).
 
-   PENTING: abis nambah/ubah/hapus env var di Vercel, WAJIB redeploy
-   dulu (Deployments -> titik tiga di deployment terakhir -> Redeploy),
-   soalnya env var baru gak otomatis kepakai di deployment yang lama.
-
-   Kalau env var-nya dihapus dari Vercel, produk balik normal lagi
-   (abis redeploy).
+   Kalau env var-nya dihapus dari Netlify, produk balik normal lagi.
    ============================================================
 
    ============================================================
    KODE PROMO KHUSUS PER-KATEGORI / PER-PRODUK
    ============================================================
    Selain kode promo umum (KODE_PROMO / HARGA_PROMO, diatur di
-   bawah ini juga lewat Vercel, berlaku ke SEMUA produk), sekarang
+   bawah ini juga lewat Netlify, berlaku ke SEMUA produk), sekarang
    bisa juga bikin kode promo yang CUMA berlaku buat:
 
    A) satu KATEGORI tertentu, contoh kategori "BAHAN MAP":
@@ -68,12 +57,7 @@
         HARGA_PROMO_OVERHEAD_KIT = (harga promonya)
       -> cuma berlaku buat produk "Overhead Kit" doang
 
-   CATATAN: kategori "bahan_map" udah di-set supaya DIKECUALIKAN dari
-   promo umum (lihat EXCLUDE_FROM_ALL_PROMO di main.js) — jadi produk
-   kategori ini CUMA bisa dapet promo lewat CODE_PROMO_BAHAN_MAP di
-   atas, gak ikut kepotong kalau orang pake kode promo umum.
-
-   Semua env var ini ditambahin di dashboard Vercel, bisa berapa
+   Semua env var ini ditambahin di dashboard Netlify, bisa berapa
    pun banyaknya, gak perlu edit kode sama sekali.
    ============================================================
 */
@@ -111,8 +95,7 @@ const PRODUCTS = [
     // Set env var COMINGSOON_PRODUCT_OVERHEAD_KIT di Netlify buat nyoba.
     // Kalau produknya udah gak "coming soon" lagi / gak dipake, hapus aja objek ini.
     name: "Hangout Kit V2",
-    usn: "HANGOUT_KIT_V2",
-    desc: "HANGOUT KIT V2 — SEGERA RILIS, PANTENG TERUS YAWH",
+    desc: "HANGOUT KIT V2 — UPDATE OVERHEAD DAN GUI SIMPLE - RINGAN",
     price: "Rp 15.000",
     category: "bahan_map",
     img: "PRODUCT/HangoutKitV2.png",
