@@ -107,7 +107,7 @@ const PRODUCTS = [
     ]
   },
   {
-    name: "COLORING HD/RUMUS HD [AM]",
+    name: "COLORING HD [AM]",
     desc: "COLORING HD / CC HD - SIMPLE DAN BAGUS",
     price: "Rp 5.000",
     category: "CC",
