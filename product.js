@@ -96,7 +96,7 @@ const PRODUCTS = [
     // Kalau produknya udah gak "coming soon" lagi / gak dipake, hapus aja objek ini.
     name: "Hangout Kit V2",
     desc: "HANGOUT KIT V2 — UPDATE OVERHEAD DAN GUI SIMPLE - RINGAN",
-    price: "Rp 15.000",
+    price: "Rp 20.000",
     category: "bahan_map",
     img: "PRODUCT/HangoutKitV2.png",
     isNew: true,
