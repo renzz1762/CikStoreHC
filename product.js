@@ -82,7 +82,7 @@ const PRODUCTS = [
   {
     name: "Script Relapse Bukit",
     desc: "CUMA BUTUH 1 SCRIPT AJAH BIAR JADI BUKIT BUKIT - RINGAN DAN SIMPLE",
-    price: "Rp 15.000",
+    price: "Rp 10.000",
     category: "script",
     img: "PRODUCT/RelapseBukit.png",
     isNew: true,
@@ -95,7 +95,7 @@ const PRODUCTS = [
   {
     name: "HANGOUT KIT",
     desc: "HANGOUT KIT SIMPLE DAN RINGAN SIMPLE FULL FITUR",
-    price: "Rp 25.000",
+    price: "Rp 20.000",
     category: "kit",
     img: "PRODUCT/HangoutKit.png",
     isNew: true,
@@ -113,7 +113,7 @@ const PRODUCTS = [
     name: "Hangout Kit V2",
     usn: "HANGOUT_KIT_V2",
     desc: "HANGOUT KIT V2-OVERHEAD BAGUS RINGAN DAN SIMPLE",
-    price: "Rp 20.000",
+    price: "Rp 15.000",
     category: "bahan_map",
     img: "PRODUCT/HangoutKitV2.png",
     isNew: true,
@@ -124,7 +124,7 @@ const PRODUCTS = [
     ]
   },
   {
-    name: "COLORING HD [AM]",
+    name: "COLORING HD/RUMUS HD [AM]",
     usn : "COLORING_HD",
     desc: "COLORING HD / CC HD - SIMPLE DAN BAGUS",
     price: "Rp 5.000",
