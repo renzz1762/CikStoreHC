@@ -1,15 +1,31 @@
 /* ============================================================
    DAFTAR PRODUK — edit / tambah / hapus produk di array bawah ini
    ============================================================
-   - category: "script", "bahan", "bahan_map", atau "kit"
+   - category: "script", "bahan", "bahan_map", "kit", "CC", atau "jasa"
        * "bahan_map"  = kategori khusus "BAHAN MAP", dipisah dari
          "bahan" biasa supaya bisa dikasih kode promo sendiri
          (lihat CODE_PROMO_BAHAN_MAP di bawah)
+       * "jasa" = kategori LAYANAN (bukan produk file siap beli).
+         Produk kategori ini GAK butuh field "price" dan GAK ada
+         tombol "Beli"/QRIS — tombolnya otomatis jadi "Lihat", yang
+         pas ditekan nampilin popup daftar layanan dari field
+         "services" (array of {name, desc, price}), tiap layanan
+         punya tombol "Order" sendiri ke WhatsApp. Contoh lengkapnya
+         ada di produk "Jasa Custom Script & Kit" di bawah.
    - img: link foto produk (boleh URL dari internet, atau taruh file
      di folder PRODUCT/ lalu tulis path-nya, contoh: "PRODUCT/nama.jpg")
      kosongkan ("") kalau belum ada foto
    - features: daftar fitur produk, muncul di popup pas tombol "Beli" ditekan
    - isNew: true/false — kalau true, muncul label "NEW" di kartu produk
+   - engines: ["studio", "lite"] (opsional) — kalau diisi, kartu produk
+     nampilin label kecil "Studio" / "Studio Lite" (bisa pilih salah satu
+     atau dua-duanya sekaligus), nandain produk itu bisa dipasang di engine
+     mana aja. Kosongin / hapus field-nya kalau produk gak relevan (misal
+     bukan map/kit Roblox), gak bakal ada label yang muncul.
+   - popular: true/false (opsional) — kalau true, muncul label tambahan
+     "★ POPULER" di samping label Studio/Studio Lite (bisa dipasang bareng,
+     jadi satu produk bisa punya 3 label sekaligus: Studio, Studio Lite,
+     POPULER).
 
    ============================================================
    FITUR "COMING SOON" (produk belum rilis)
@@ -86,6 +102,7 @@ const PRODUCTS = [
     category: "script",
     img: "PRODUCT/RelapseBukit.png",
     isNew: true,
+    engines: ["studio", "lite"],
     features: [
       "Tinggal masukin 1 script, langsung jalan",
       "Ringan, ga bikin lag",
@@ -93,12 +110,14 @@ const PRODUCTS = [
     ]
   },
   {
-    name: "HANGOUT KIT",
+    name: "Hangout Kit V1",
     desc: "HANGOUT KIT SIMPLE DAN RINGAN SIMPLE FULL FITUR",
     price: "Rp 20.000",
     category: "kit",
     img: "PRODUCT/HangoutKit.png",
     isNew: true,
+    popular: true,
+    engines: ["studio", "lite"],
     features: [
       "Kit lengkap siap pakai",
       "Tampilan simpel dan ringan",
@@ -117,6 +136,8 @@ const PRODUCTS = [
     category: "bahan_map",
     img: "PRODUCT/HangoutKitV2.png",
     isNew: true,
+    popular: true,
+    engines: ["studio", "lite"],
     features: [
       "Kit lengkap siap pakai",
       "Fitur lengkap, ringan",
@@ -124,7 +145,41 @@ const PRODUCTS = [
     ]
   },
   {
-    name: "COLORING HD/RUMUS HD [AM]",
+    // Contoh produk kategori "jasa" (layanan) — beda dari produk biasa:
+    // - GAK pake field "price" & GAK ada tombol "Beli"/QRIS, soalnya
+    //   harga & prosesnya nego/order langsung ke owner.
+    // - Tombol di kartu produknya otomatis jadi "Lihat", pas ditekan
+    //   muncul popup daftar layanan dari field "services" di bawah,
+    //   tiap layanan punya tombol "Order" sendiri (langsung ke WhatsApp).
+    // - Tinggal tambah/hapus/ubah item di array "services" buat
+    //   ngatur daftar yang bisa di-order.
+    name: "Jasa Custom Script & Kit",
+    desc: "BUTUH SCRIPT ATAU KIT YANG DIBUAT KHUSUS SESUAI KEBUTUHAN? CEK DAFTAR LAYANANNYA DI SINI.",
+    category: "jasa",
+    img: "JASAIMG/JasaCustom.png",
+    isNew: true,
+    popular: true,
+    engines: ["studio", "lite"],
+    services: [
+      { name: "Custom Script Sederhana", desc: "Script simple sesuai request, 1-2 fungsi.", price: "Rp ???" },
+      { name: "Custom Kit Lengkap", desc: "Kit custom full fitur sesuai kebutuhan game kamu.", price: "Rp ???" },
+      { name: "Konsultasi & Perbaikan Script", desc: "Bantu benerin script yang error / gak jalan.", price: "Rp ???" }
+    ]
+  },
+  {
+    name: "Jasa Bikin Website & Apk",
+    desc: "BUTUH WEBSITE ATAU APK YANG DIBUAT KHUSUS SESUAI KEBUTUHAN? CEK DAFTAR LAYANANNYA DI SINI.",
+    category: "jasa",
+    img: "JASAIMG/CostumApk.png",
+    isNew: true,
+    popular: true,
+    services: [
+      { name: "Jasa Bikin Website", desc: "NERIMA JASA BIKIN WRBSITE AI , WEBSITE JUALAN , WEBSITE STREAM , WEBSITE COMIC , WEBSITE MUSIC NO IKLAN , WEBSITE PROMOSI DAN DLL", price: "Rp ???" },
+      { name: "Jasa Bikin Apk", desc: "NERIMA JASA BIKIN APK , APK PROMOSI , APK JUALAN , APK STREAM , APK COMIC , APK MUSIC NO IKLAN , APK AI DAN DLL", price: "Rp ???" }
+    ]
+  },
+  {
+    name: "COLORING HD [AM]",
     usn : "COLORING_HD",
     desc: "COLORING HD / CC HD - SIMPLE DAN BAGUS",
     price: "Rp 5.000",

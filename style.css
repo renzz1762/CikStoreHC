@@ -9,6 +9,7 @@
   --blue-dark:#0e5aa8;
   --blue-light:#e4f1fc;
   --teal:#1fa6a0;
+  --orange:#f2994a;
   --radius:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -60,7 +61,15 @@ header{
 .btn-ghost{border-color:var(--line);color:var(--text);background:#fff;}
 .btn-ghost:hover{border-color:var(--blue);color:var(--blue-dark);}
 .nav .btn{padding:9px 16px;}
+.nav-actions{display:flex;align-items:center;gap:8px;}
+.nav-promo-btn{white-space:nowrap;}
+.nav-promo-btn svg{width:15px;height:15px;flex-shrink:0;}
 .saluran-wrap{position:relative;}
+@media (max-width:400px){
+  .nav-actions{gap:6px;}
+  .nav .btn{padding:8px 12px;font-size:13px;}
+  .nav-promo-btn svg{width:14px;height:14px;}
+}
 
 /* HERO */
 .hero{padding:64px 0 40px;border-bottom:1px solid var(--line);position:relative;overflow:hidden;background:linear-gradient(180deg, var(--blue-light), var(--bg));}
@@ -200,15 +209,108 @@ h1.headline{font-size:34px;line-height:1.18;font-weight:700;letter-spacing:-0.3p
   background:rgba(255,255,255,0.14);padding:4px 10px;border-radius:6px;margin-top:2px;
 }
 
-/* PANEL KODE PROMO (di luar, di bawah katalog) */
+/* TESTIMONI SLIDER — 3 foto keliatan sekaligus per halaman */
+.testimoni{padding:8px 0 4px;}
+.testi-wrap{max-width:440px;margin:0 auto;display:flex;flex-direction:column;gap:16px;}
+.testi-card{
+  background:var(--panel);border:1px solid var(--line);border-radius:16px;
+  padding:16px;display:flex;flex-direction:column;gap:12px;
+  box-shadow:0 4px 18px rgba(16,36,62,0.06);
+}
+.testi-slider{position:relative;}
+.testi-track{
+  display:flex;overflow-x:auto;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;scroll-behavior:smooth;
+  overscroll-behavior-x:contain;border-radius:10px;
+  scrollbar-width:none;
+}
+.testi-track::-webkit-scrollbar{display:none;}
+.testi-page{flex:0 0 100%;width:100%;scroll-snap-align:start;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.testi-item{position:relative;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:var(--panel-2);border:1px solid var(--line);}
+.testi-item img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
+.testi-fallback{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:var(--panel-2);}
+.testi-fallback .fallback-icon{width:24px;height:24px;}
+.testi-fallback span{font-size:9px;color:var(--muted);text-align:center;padding:0 4px;}
+.testi-name{
+  position:absolute;left:0;right:0;bottom:0;padding:5px 6px 4px;
+  background:linear-gradient(0deg, rgba(8,18,32,0.8), transparent);
+  color:#fff;font-size:9.5px;font-weight:600;line-height:1.25;
+}
+.testi-nav{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:2;
+  width:30px;height:30px;border-radius:50%;border:none;
+  background:rgba(8,18,32,0.5);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.testi-nav:hover{background:rgba(8,18,32,0.72);}
+.testi-nav svg{width:15px;height:15px;}
+.testi-nav.prev{left:-6px;}
+.testi-nav.next{right:-6px;}
+.testi-nav.is-disabled{opacity:0.35;pointer-events:none;}
+.testi-hint{
+  display:flex;align-items:center;justify-content:center;gap:8px;font-size:11.5px;color:var(--muted);
+  transition:opacity .3s ease, transform .3s ease;
+}
+.testi-hint svg{width:14px;height:14px;color:var(--blue);flex-shrink:0;}
+.testi-hint.hide{opacity:0;transform:translateY(-4px);pointer-events:none;height:0;overflow:hidden;}
+.testi-dots{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.testi-dot{
+  width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--panel-2);
+  color:var(--muted);font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.testi-dot.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+.testi-chat-row{
+  display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;
+  padding-top:14px;border-top:1px solid var(--line);
+}
+.testi-chat-text{font-size:13px;color:var(--muted);max-width:280px;}
+.testi-chat-btn{width:100%;max-width:260px;justify-content:center;gap:8px;}
+
+/* KATEGORI JASA — kartu tanpa harga, tombol "Lihat" full width */
+.card-foot.jasa-foot{justify-content:stretch;}
+.card-foot.jasa-foot .buy-btn{width:100%;text-align:center;}
+
+/* MODAL JASA — daftar layanan yang bisa di-order */
+.modal-jasa-desc{font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.5;}
+.service-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.service-item{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px 12px;
+}
+.service-info{display:flex;flex-direction:column;gap:2px;}
+.service-name{font-size:13px;font-weight:600;color:var(--text);}
+.service-desc{font-size:11.5px;color:var(--muted);}
+.service-price{font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:700;letter-spacing:1px;color:var(--blue-dark);margin-top:2px;}
+.service-order-btn{flex-shrink:0;padding:7px 14px;font-size:12px;width:auto;}
+
+/* BADGE ENGINE (dipake di kartu produk) */
+.engine-badges{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.engine-badge{
+  display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;
+  padding:4px 9px;border-radius:100px;background:var(--blue-light);color:var(--blue-dark);
+}
+.engine-badge svg{width:12px;height:12px;}
+
+/* BADGE POPULER — ditaruh di card-media, nempel di bawah label NEW */
+.popular-badge{
+  position:absolute;top:34px;right:8px;z-index:1;
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10.5px;font-weight:700;letter-spacing:0.3px;
+  padding:4px 9px 4px 7px;border-radius:5px;
+  background:linear-gradient(135deg,#ffc247,#ff2247);color:#fff;
+  box-shadow:0 3px 8px rgba(255,122,40,0.38);
+}
+.popular-badge svg{width:11px;height:11px;flex-shrink:0;filter:drop-shadow(0 1px 1px rgba(0,0,0,0.15));}
+
 #promoSection{padding:0 32px 36px;}
 @media (max-width: 560px){ #promoSection{padding:0 24px 30px;} }
 .promo-panel{
   background:var(--panel);border:1px solid var(--line);border-radius:14px;
   padding:22px 24px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;
 }
-.promo-panel-text h3{font-size:16px;margin-bottom:4px;}
+.promo-panel-text h3{font-size:16px;margin-bottom:4px;display:flex;align-items:center;gap:7px;}
 .promo-panel-text p{font-size:13px;color:var(--muted);max-width:360px;}
+.promo-saluran-btn{margin-top:12px;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;padding:8px 14px;}
+.saluran-icon-inline{width:15px;height:15px;flex-shrink:0;}
 .promo-panel-form{flex:1;min-width:260px;max-width:360px;}
 .promo-panel .promo-row{display:flex;gap:8px;}
 .promo-panel input{
@@ -320,13 +422,20 @@ footer{border-top:1px solid var(--line);padding:36px 0 96px;background:var(--pan
 #saluranPopover{position:absolute;top:calc(100% + 10px);right:0;}
 
 /* PROFILE MODAL */
-.profile-head{display:flex;align-items:center;gap:14px;}
+.profile-modal{overflow:hidden;}
+.profile-modal .modal-close{background:rgba(255,255,255,0.25);color:#fff;border-color:rgba(255,255,255,0.45);}
+.profile-modal .modal-close:hover{background:rgba(255,255,255,0.4);}
+.profile-banner{height:64px;margin:-24px -24px 0;background:linear-gradient(120deg, var(--blue), var(--blue-dark));}
+.profile-head{display:flex;align-items:center;gap:14px;margin-top:-32px;position:relative;z-index:1;}
 .profile-avatar{
-  width:56px;height:56px;border-radius:50%;background:var(--blue-light);color:var(--blue-dark);
+  width:64px;height:64px;border-radius:50%;background:var(--blue-light);color:var(--blue-dark);
   display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;flex-shrink:0;
+  border:3px solid #fff;box-shadow:0 2px 8px rgba(16,36,62,0.18);
 }
 .profile-avatar svg{width:28px;height:28px;}
 .profile-avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.profile-head h3{display:flex;align-items:center;gap:5px;font-size:16px;}
+.profile-head .verified-badge{width:15px;height:15px;flex-shrink:0;}
 .profile-role{font-size:12.5px;color:var(--muted);margin-top:2px;}
 
 @media (max-width: 860px){

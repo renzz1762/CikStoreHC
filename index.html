@@ -23,11 +23,18 @@
     <nav class="nav-links">
       <a href="#home">Home</a>
       <a href="#katalog">Produk</a>
+      <a href="#promoSection">Promo</a>
       <a href="#cara-beli">Cara Beli</a>
     </nav>
-    <div class="saluran-wrap">
-      <button class="btn btn-primary" id="navSaluranBtn">Saluran</button>
-      <div class="popover" id="saluranPopover"></div>
+    <div class="nav-actions">
+      <a href="#promoSection" class="btn btn-ghost nav-promo-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 12l-8.6 8.6a2 2 0 01-2.8 0l-6.8-6.8a2 2 0 010-2.8L11 2.4A2 2 0 0112.4 2H19a2 2 0 012 2v6.6a2 2 0 01-.6 1.4z"/><circle cx="15.5" cy="7.5" r="1.5"/></svg>
+        Promo
+      </a>
+      <div class="saluran-wrap">
+        <button class="btn btn-primary" id="navSaluranBtn">Saluran</button>
+        <div class="popover" id="saluranPopover"></div>
+      </div>
     </div>
   </div>
 </header>
@@ -69,6 +76,40 @@
   </div>
 </section>
 
+<section class="testimoni wrap" id="testimoni">
+  <div class="section-head">
+    <div>
+      <h2><svg class="head-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.9 6.9 7.4.6-5.6 4.9 1.7 7.3L12 17.9l-6.4 3.8 1.7-7.3-5.6-4.9 7.4-.6z"/></svg> Testimoni Pembeli</h2>
+      <p>Bukti asli dari yang udah beli & pakai script/bahan di CIK STORE.</p>
+    </div>
+  </div>
+  <div class="testi-wrap">
+    <div class="testi-card">
+      <div class="testi-slider" id="testiSlider">
+        <button class="testi-nav prev" id="testiPrev" aria-label="Testimoni sebelumnya">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="testi-track" id="testiTrack"></div>
+        <button class="testi-nav next" id="testiNext" aria-label="Testimoni berikutnya">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <div class="testi-hint" id="testiHint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3"/><path d="M16 9l4 3-4 3"/></svg>
+        Geser buat liat testimoni lainnya
+      </div>
+      <div class="testi-dots" id="testiDots"></div>
+      <div class="testi-chat-row">
+        <p class="testi-chat-text">Mau lihat testimoni lengkap dari pembeli lain?</p>
+        <a class="btn btn-ghost testi-chat-btn" id="testiSaluranBtn" target="_blank" rel="noopener">
+          <svg class="saluran-icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a2 2 0 002 2h1l4 4V5L6 9H5a2 2 0 00-2 2z"/><path d="M16 8a5 5 0 010 8"/><path d="M19 5a9 9 0 010 14"/></svg>
+          Cek Saluran WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="features wrap">
   <div class="features-row">
     <div class="feature">
@@ -86,6 +127,26 @@
   </div>
 </section>
 
+<section class="wrap" id="promoSection">
+  <div class="promo-panel">
+    <div class="promo-panel-text">
+      <h3><svg class="head-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 12l-8.6 8.6a2 2 0 01-2.8 0l-6.8-6.8a2 2 0 010-2.8L11 2.4A2 2 0 0112.4 2H19a2 2 0 012 2v6.6a2 2 0 01-.6 1.4z"/><circle cx="15.5" cy="7.5" r="1.5"/></svg> Punya kode promo?</h3>
+      <p>Masukin kode promo di bawah buat dapetin harga spesial. Kode promo rutin dibagiin lewat Saluran WhatsApp kami, gas join biar gak ketinggalan info promo terbaru.</p>
+      <a class="btn btn-ghost promo-saluran-btn" id="promoSaluranBtn" target="_blank" rel="noopener">
+        <svg class="saluran-icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a2 2 0 002 2h1l4 4V5L6 9H5a2 2 0 00-2 2z"/><path d="M16 8a5 5 0 010 8"/><path d="M19 5a9 9 0 010 14"/></svg>
+        Saluran WhatsApp
+      </a>
+    </div>
+    <div class="promo-panel-form">
+      <div class="promo-row">
+        <input type="text" id="promoInput" placeholder="Masukin kode promo" maxlength="24" autocomplete="off">
+        <button class="btn btn-primary" id="promoBtn">Pakai Kode</button>
+      </div>
+      <p class="promo-msg" id="promoMsg"></p>
+    </div>
+  </div>
+</section>
+
 <section class="catalog wrap" id="katalog">
   <div class="section-head">
     <div>
@@ -96,28 +157,13 @@
       <button class="tab active" data-filter="semua">Semua</button>
       <button class="tab" data-filter="script">Script & Source Code</button>
       <button class="tab" data-filter="bahan">Bahan Website</button>
+      <button class="tab" data-filter="jasa">Jasa</button>
       <button class="tab" data-filter="CC">COLORING HD</button>
       <button class="tab" data-filter="bahan_map">BAHAN MAP</button>
       <button class="tab" data-filter="kit">KIT</button>
     </div>
   </div>
   <div class="grid" id="productGrid"></div>
-</section>
-
-<section class="wrap" id="promoSection">
-  <div class="promo-panel">
-    <div class="promo-panel-text">
-      <h3>Punya kode promo?</h3>
-      <p>Masukin kode promo di bawah. Kode umum otomatis kepasang ke semua produk, kode khusus cuma kepasang ke kategori/produk tertentu aja.</p>
-    </div>
-    <div class="promo-panel-form">
-      <div class="promo-row">
-        <input type="text" id="promoInput" placeholder="Masukin kode promo" maxlength="24" autocomplete="off">
-        <button class="btn btn-primary" id="promoBtn">Pakai Kode</button>
-      </div>
-      <p class="promo-msg" id="promoMsg"></p>
-    </div>
-  </div>
 </section>
 
 <section class="steps wrap" id="cara-beli">
@@ -213,10 +259,27 @@
   </div>
 </div>
 
+<!-- MODAL JASA (daftar layanan yang bisa di-order) -->
+<div class="modal-overlay" id="modalJasaOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalJasaClose">✕</button>
+    <h3 id="modalJasaName">Nama Jasa</h3>
+    <p class="modal-jasa-desc" id="modalJasaDesc"></p>
+
+    <div class="pay-block">
+      <h4><svg class="head-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg> Pilihan yang bisa di-order</h4>
+      <ul class="service-list" id="serviceList"></ul>
+    </div>
+
+    <p class="modal-note">Harga masih "???" karena nego langsung lewat chat. Tekan "Order" di layanan yang kamu mau, nanti diarahin ke WhatsApp buat tanya harga & lanjut prosesnya.</p>
+  </div>
+</div>
+
 <!-- MODAL PROFILE OWNER -->
 <div class="modal-overlay" id="profileOverlay">
-  <div class="modal">
+  <div class="modal profile-modal">
     <button class="modal-close" id="profileClose">✕</button>
+    <div class="profile-banner"></div>
     <div class="profile-head">
       <span class="profile-avatar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.4-3.6 4.4-5.5 7.5-5.5s6.1 1.9 7.5 5.5"/></svg>
@@ -257,6 +320,7 @@
 <div class="popover" id="infoPopover" style="position:fixed;right:16px;bottom:76px;"></div>
 
 <script src="product.js"></script>
+<script src="testimoni.js"></script>
 <script src="main.js"></script>
 </body>
 </html>

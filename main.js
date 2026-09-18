@@ -140,7 +140,7 @@ function handleImgError(imgEl){
   imgEl.outerHTML = fallbackIcon;
 }
 
-const CATEGORY_LABELS = { script: "Script", bahan: "Bahan", bahan_map: "BAHAN MAP", kit: "KIT", CC: "COLORING HD" };
+const CATEGORY_LABELS = { script: "SCRIPT", bahan: "Bahan", bahan_map: "BAHAN MAP", kit: "KIT", CC: "COLORING HD", jasa: "JASA" };
 
 /* ============================================================
    COMING SOON — status & jam rilis diambil dari Netlify Function,
@@ -226,6 +226,7 @@ function renderProducts(filter){
 
     const comingSoon = getComingSoonInfo(p);
     const promoPrice = getPromoPriceFor(p);
+    const isJasa = p.category === "jasa";
 
     const card = document.createElement("div");
     card.className = "card" + (comingSoon ? " coming-soon-card" : "");
@@ -233,6 +234,7 @@ function renderProducts(filter){
       <div class="card-media">
         <span class="badge">${catLabel}</span>
         ${p.isNew && !comingSoon ? '<span class="new-badge">NEW</span>' : ''}
+        ${p.popular && !comingSoon ? POPULAR_BADGE_MEDIA : ''}
         ${media}
       </div>
       <div class="card-body">
@@ -241,7 +243,9 @@ function renderProducts(filter){
           <svg class="verified-badge" viewBox="0 0 24 24" fill="#1478d4"><path d="M12 2l2.4 1.3 2.7-.4 1.3 2.4 2.4 1.3-.4 2.7 1.3 2.4L20.4 13l.4 2.7-2.4 1.3-1.3 2.4-2.7-.4L12 20.4l-2.4-1.3-2.7.4-1.3-2.4-2.4-1.3.4-2.7L2.2 11l1.3-2.4-.4-2.7 2.4-1.3L6.8 2.2l2.7.4z"/><path d="M9 12.2l2 2 4-4.4" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </h3>
         <p>${p.desc}</p>
-        <div class="card-foot">
+        ${engineBadgesFor(p.engines) ? `<div class="engine-badges">${engineBadgesFor(p.engines)}</div>` : ""}
+        <div class="card-foot${isJasa ? " jasa-foot" : ""}">
+          ${isJasa ? "" : `
           <div class="price-wrap">
             ${promoPrice ? `
               <span class="price struck">${p.price}</span>
@@ -251,8 +255,8 @@ function renderProducts(filter){
               <span class="price">${p.price}</span>
               <span class="price-alt">atau ${shortPrice(p.price)}</span>
             `}
-          </div>
-          <button class="buy-btn" data-idx="${PRODUCTS.indexOf(p)}" ${comingSoon ? "disabled" : ""}>${comingSoon ? "Segera" : "Beli"}</button>
+          </div>`}
+          <button class="buy-btn" data-idx="${PRODUCTS.indexOf(p)}" ${comingSoon ? "disabled" : ""}>${comingSoon ? "Segera" : (isJasa ? "Lihat" : "Beli")}</button>
         </div>
       </div>
       ${comingSoon ? `
@@ -273,7 +277,9 @@ function renderProducts(filter){
   grid.querySelectorAll(".buy-btn").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       if(btn.disabled) return;
-      openBuyModal(PRODUCTS[btn.dataset.idx]);
+      const product = PRODUCTS[btn.dataset.idx];
+      if(product.category === "jasa") openServiceModal(product);
+      else openBuyModal(product);
     });
   });
 }
@@ -322,6 +328,37 @@ function openBuyModal(product){
 }
 document.getElementById("modalClose").addEventListener("click", ()=> buyOverlay.classList.remove("open"));
 buyOverlay.addEventListener("click", (e)=>{ if(e.target === buyOverlay) buyOverlay.classList.remove("open"); });
+
+/* MODAL JASA — dipake buat produk category "jasa": nampilin daftar
+   layanan (field "services" di product.js) + tombol "Order" per item,
+   gak pake QRIS/transfer soalnya harga & prosesnya nego lewat chat. */
+const jasaOverlay = document.getElementById("modalJasaOverlay");
+function openServiceModal(product){
+  document.getElementById("modalJasaName").textContent = product.name;
+  document.getElementById("modalJasaDesc").textContent = product.desc || "";
+
+  const serviceList = document.getElementById("serviceList");
+  const services = product.services || [];
+  serviceList.innerHTML = services.map((s) => {
+    // Harga sengaja ditampilin sebagai "???" (bukan harga aslinya) —
+    // biar yang mau tau harga pastinya harus tekan "Order" dulu buat
+    // DM/chat langsung ke owner.
+    const orderMsg = `Halo, saya mau tanya harga & order layanan "${s.name}" dari "${product.name}" di CIK STORE.`;
+    return `
+      <li class="service-item">
+        <div class="service-info">
+          <span class="service-name">${s.name}</span>
+          ${s.desc ? `<span class="service-desc">${s.desc}</span>` : ""}
+          <span class="service-price">???</span>
+        </div>
+        <a class="btn btn-primary service-order-btn" target="_blank" rel="noopener" href="${waLink(orderMsg)}">Order</a>
+      </li>`;
+  }).join("");
+
+  jasaOverlay.classList.add("open");
+}
+document.getElementById("modalJasaClose").addEventListener("click", ()=> jasaOverlay.classList.remove("open"));
+jasaOverlay.addEventListener("click", (e)=>{ if(e.target === jasaOverlay) jasaOverlay.classList.remove("open"); });
 
 /* KODE PROMO — section di luar, di bawah katalog produk */
 const promoBtn = document.getElementById("promoBtn");
@@ -414,6 +451,17 @@ function renderSaluran(container){
 renderSaluran(document.getElementById("infoPopover"));
 renderSaluran(document.getElementById("saluranPopover"));
 
+/* TOMBOL SALURAN WA DI PANEL PROMO */
+const promoSaluranBtn = document.getElementById("promoSaluranBtn");
+if(promoSaluranBtn){
+  const waSaluran = SALURAN_LIST.find(s => s.icon === "channel") || SALURAN_LIST[0];
+  if(waSaluran){
+    promoSaluranBtn.href = waSaluran.link;
+  } else {
+    promoSaluranBtn.style.display = "none";
+  }
+}
+
 /* TOMBOL SALURAN (header atas) */
 const saluranPopover = document.getElementById("saluranPopover");
 const navSaluranBtn = document.getElementById("navSaluranBtn");
@@ -429,7 +477,7 @@ document.addEventListener("click", (e)=>{
 
 /* PROFILE MODAL */
 const profileOverlay = document.getElementById("profileOverlay");
-document.getElementById("profileName").textContent = OWNER_NAME;
+document.getElementById("profileName").innerHTML = `${OWNER_NAME} <svg class="verified-badge" viewBox="0 0 24 24" fill="#1478d4"><path d="M12 2l2.4 1.3 2.7-.4 1.3 2.4 2.4 1.3-.4 2.7 1.3 2.4L20.4 13l.4 2.7-2.4 1.3-1.3 2.4-2.7-.4L12 20.4l-2.4-1.3-2.7.4-1.3-2.4-2.4-1.3.4-2.7L2.2 11l1.3-2.4-.4-2.7 2.4-1.3L6.8 2.2l2.7.4z"/><path d="M9 12.2l2 2 4-4.4" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 document.getElementById("profileRole").textContent = OWNER_ROLE;
 document.getElementById("profileBio").textContent = OWNER_BIO;
 document.getElementById("profilePhoto").src = OWNER_PHOTO;
@@ -462,6 +510,175 @@ document.addEventListener("click", (e)=>{
     infoPopoverEl.classList.remove("open");
   }
 });
+
+/* ============================================================
+   SLIDER TESTIMONI
+   Daftar testimoninya ada di file testimoni.js (TESTIMONI_LIST).
+   Ditampilin 3 foto sekaligus per halaman; kalau testimoninya
+   lebih dari 3, geser/tekan panah buat pindah ke 3 foto berikutnya.
+   ============================================================ */
+const TESTI_PER_PAGE = 3;
+let testiIndex = 0;
+let testiTotalPages = 1;
+
+// Kalau field "img" kosong, coba ambil dari TESTIMONIIMG/<nomor>.png,
+// gagal -> coba .jpg, gagal lagi -> tampilin ikon fallback.
+const testiFallbackHtml = `<div class="testi-fallback">${fallbackIcon}<span>Belum ada foto</span></div>`;
+
+function testiHandleImgError(imgEl, idx){
+  if(imgEl.dataset.explicit){
+    imgEl.outerHTML = testiFallbackHtml;
+    return;
+  }
+  if(!imgEl.dataset.tried){
+    imgEl.dataset.tried = "1";
+    imgEl.src = `TESTIMONIIMG/${idx + 1}.jpg`;
+    return;
+  }
+  imgEl.outerHTML = testiFallbackHtml;
+}
+
+function testiImgTag(item, idx){
+  const hasLink = item.img && item.img.trim().length > 0;
+  const src = hasLink ? item.img : `TESTIMONIIMG/${idx + 1}.png`;
+  const explicitAttr = hasLink ? ' data-explicit="1"' : '';
+  return `<img src="${src}" alt="Testimoni ${idx + 1}"${explicitAttr} onerror="testiHandleImgError(this, ${idx})">`;
+}
+
+function renderTestimoni(){
+  const testiSection = document.getElementById("testimoni");
+  const track = document.getElementById("testiTrack");
+  const dots = document.getElementById("testiDots");
+  const prevBtn = document.getElementById("testiPrev");
+  const nextBtn = document.getElementById("testiNext");
+  const hint = document.getElementById("testiHint");
+  if(!testiSection || !track || !dots) return;
+
+  if(typeof TESTIMONI_LIST === "undefined" || !TESTIMONI_LIST.length){
+    testiSection.style.display = "none";
+    return;
+  }
+
+  // Bagi testimoni jadi kelompok 3-3 per halaman
+  const pages = [];
+  for(let i = 0; i < TESTIMONI_LIST.length; i += TESTI_PER_PAGE){
+    pages.push(TESTIMONI_LIST.slice(i, i + TESTI_PER_PAGE));
+  }
+  testiTotalPages = pages.length;
+
+  track.innerHTML = pages.map((page, pageIdx) => `
+    <div class="testi-page">
+      ${page.map((item, i) => {
+        const idx = pageIdx * TESTI_PER_PAGE + i;
+        return `
+          <div class="testi-item">
+            ${testiImgTag(item, idx)}
+            ${item.name ? `<span class="testi-name">${item.name}</span>` : ""}
+          </div>`;
+      }).join("")}
+    </div>
+  `).join("");
+
+  const multiPage = testiTotalPages > 1;
+  dots.innerHTML = multiPage ? pages.map((_, idx) => `
+    <button class="testi-dot${idx === 0 ? " active" : ""}" data-idx="${idx}" aria-label="Halaman testimoni ke-${idx + 1}">${idx + 1}</button>
+  `).join("") : "";
+  dots.style.display = multiPage ? "" : "none";
+  if(prevBtn) prevBtn.style.display = multiPage ? "" : "none";
+  if(nextBtn) nextBtn.style.display = multiPage ? "" : "none";
+  if(hint) hint.style.display = multiPage ? "" : "none";
+
+  dots.querySelectorAll(".testi-dot").forEach(dot => {
+    dot.addEventListener("click", () => {
+      goToTesti(Number(dot.dataset.idx));
+      hideTestiHint();
+    });
+  });
+
+  goToTesti(0);
+}
+
+function goToTesti(idx){
+  const track = document.getElementById("testiTrack");
+  if(!track || !testiTotalPages) return;
+  testiIndex = Math.max(0, Math.min(idx, testiTotalPages - 1));
+  // FIX TOTAL: dulu posisi slide dihitung manual pake transform +
+  // drag jari sendiri (rawan geser kepotong/wrap-around -> kelihatan
+  // "keluar layar"/blank). Sekarang pindah ke scroll native bawaan
+  // browser (scroll-snap) — jauh lebih kebal, karena scroll horizontal
+  // di dalam kotak ini ditangani sepenuhnya sama browser sendiri,
+  // gak akan pernah nyangkut di posisi "antara" dua halaman.
+  track.scrollTo({ left: testiIndex * track.clientWidth, behavior: "smooth" });
+  document.querySelectorAll(".testi-dot").forEach((d, i) => d.classList.toggle("active", i === testiIndex));
+  updateTestiNavState();
+}
+
+// Redupin/nonaktifin tombol prev/next pas udah di ujung, biar jelas
+// gak ada halaman lagi (dan gak salah geser ke arah yang gak ada apa-apanya).
+function updateTestiNavState(){
+  const prevBtn = document.getElementById("testiPrev");
+  const nextBtn = document.getElementById("testiNext");
+  if(prevBtn) prevBtn.classList.toggle("is-disabled", testiIndex <= 0);
+  if(nextBtn) nextBtn.classList.toggle("is-disabled", testiIndex >= testiTotalPages - 1);
+}
+
+function hideTestiHint(){
+  const hint = document.getElementById("testiHint");
+  if(hint) hint.classList.add("hide");
+}
+
+const testiPrevBtn = document.getElementById("testiPrev");
+const testiNextBtn = document.getElementById("testiNext");
+if(testiPrevBtn) testiPrevBtn.addEventListener("click", () => { goToTesti(testiIndex - 1); hideTestiHint(); });
+if(testiNextBtn) testiNextBtn.addEventListener("click", () => { goToTesti(testiIndex + 1); hideTestiHint(); });
+
+/* Geser (swipe) pake jari di HP — sekarang PAKE SCROLL NATIVE BROWSER,
+   bukan hitung transform manual lagi. Jari geser = scroll biasa di
+   dalam kotak testi-track (CSS: overflow-x:auto + scroll-snap-type),
+   browser yang urus semuanya (klem otomatis di ujung, gak akan pernah
+   nyangkut blank/setengah kepotong). Kita cuma dengerin event "scroll"
+   buat nyamain state dot & tombol prev/next pas user geser manual. */
+(function initTestiScrollSync(){
+  const track = document.getElementById("testiTrack");
+  if(!track) return;
+  let scrollTimer = null;
+  track.addEventListener("scroll", () => {
+    if(scrollTimer) clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      if(!track.clientWidth) return;
+      const idx = Math.round(track.scrollLeft / track.clientWidth);
+      testiIndex = Math.max(0, Math.min(idx, testiTotalPages - 1));
+      document.querySelectorAll(".testi-dot").forEach((d, i) => d.classList.toggle("active", i === testiIndex));
+      updateTestiNavState();
+    }, 80);
+    hideTestiHint();
+  }, { passive: true });
+})();
+
+const testiSaluranBtn = document.getElementById("testiSaluranBtn");
+if(testiSaluranBtn){
+  const waSaluran = SALURAN_LIST.find(s => s.icon === "channel") || SALURAN_LIST[0];
+  if(waSaluran) testiSaluranBtn.href = waSaluran.link;
+}
+
+renderTestimoni();
+
+// Badge "Studio" / "Studio Lite" — dipake di kartu produk
+// (produk yang mau nampilin badge ini tinggal kasih field engines: ["studio","lite"]).
+const ENGINE_BADGE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.7l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.7l7 4a2 2 0 002 0l7-4a2 2 0 001-1.7z"/><path d="M3.3 7l8.7 5 8.7-5M12 22V12"/></svg>`;
+// Badge "POPULER" sekarang ditaruh di card-media (bawah label NEW),
+// bukan dempet sama badge Studio/Studio Lite lagi.
+const POPULAR_BADGE_MEDIA = `<span class="popular-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.9 7.4.6-5.6 4.9 1.7 7.3L12 17.9l-6.4 3.8 1.7-7.3-5.6-4.9 7.4-.6z"/></svg> Populer</span>`;
+
+// Bikin badge engine per produk berdasarkan field "engines" (array: "studio" / "lite").
+// Kalau field-nya gak diisi di product.js, gak ada badge yang muncul (gak maksa semua produk).
+function engineBadgesFor(engines){
+  if(!Array.isArray(engines) || !engines.length) return "";
+  const parts = [];
+  if(engines.includes("studio")) parts.push(`<span class="engine-badge">${ENGINE_BADGE_SVG} Studio</span>`);
+  if(engines.includes("lite")) parts.push(`<span class="engine-badge">${ENGINE_BADGE_SVG} Studio Lite</span>`);
+  return parts.join("");
+}
 
 renderProducts("semua");
 loadComingSoon();
