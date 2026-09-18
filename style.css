@@ -371,6 +371,21 @@ footer{border-top:1px solid var(--line);padding:36px 0 96px;background:var(--pan
 .promo-msg{font-size:12px;margin-top:8px;min-height:14px;}
 .promo-msg.error{color:#c0392b;}
 .promo-msg.success{color:#1a9b5c;}
+.active-promo-list{display:none;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.promo-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#eaf4ff;color:var(--blue-dark);border:1px solid #cfe6ff;
+  border-radius:999px;padding:5px 6px 5px 12px;
+  font-size:12px;font-weight:600;letter-spacing:.2px;
+}
+.promo-chip-remove{
+  background:none;border:none;cursor:pointer;
+  color:var(--blue-dark);font-size:15px;line-height:1;
+  width:18px;height:18px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  padding:0;
+}
+.promo-chip-remove:hover{background:#d6ebff;}
 .pay-block{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:16px;margin-bottom:14px;}
 .pay-block h4{font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 .qris-box{

@@ -73,9 +73,10 @@ function formatRupiah(value){
 }
 
 let currentProduct = null;
-// sitePromo sekarang berbentuk objek:
-// { scope: "all" | "category" | "product", target: null | "bahan_map" | "OVERHEAD_KIT", priceStr }
-let sitePromo = null;
+// activePromos = daftar SEMUA kode promo yang lagi aktif sekaligus
+// (bukan cuma 1 kayak dulu). Tiap item:
+// { code, scope: "all" | "category" | "product", target: null | "bahan_map" | "OVERHEAD_KIT", priceStr }
+let activePromos = [];
 
 // Ubah nama produk jadi KEY buat matching sama env var Netlify.
 // Contoh: "Overhead Kit" -> "OVERHEAD_KIT"
@@ -93,17 +94,32 @@ function slugifyKey(name){
 // kalau perlu (harus sama persis kayak field "category" di product.js).
 const EXCLUDE_FROM_ALL_PROMO = ["bahan_map"];
 
-// Cek promo mana yang berlaku buat 1 produk tertentu. Return string harga
-// promo (misal "Rp 10.000") kalau berlaku, atau null kalau nggak.
+// Cek promo mana yang berlaku buat 1 produk tertentu, dari SEMUA kode promo
+// yang lagi aktif (activePromos bisa isi banyak kode sekaligus). Kalau ada
+// lebih dari 1 promo yang cocok ke produk yang sama, yang paling spesifik
+// menang: khusus produk > khusus kategori > umum (semua produk).
+// Return string harga promo (misal "Rp 10.000") kalau ada yang berlaku,
+// atau null kalau nggak ada.
 function getPromoPriceFor(product){
-  if(!sitePromo) return null;
-  if(sitePromo.scope === "all"){
-    if(EXCLUDE_FROM_ALL_PROMO.includes(product.category)) return null;
-    return sitePromo.priceStr;
+  if(!activePromos.length) return null;
+
+  const productKey = product.usn || slugifyKey(product.name);
+  let productMatch = null;
+  let categoryMatch = null;
+  let allMatch = null;
+
+  for(const promo of activePromos){
+    if(promo.scope === "product" && promo.target === productKey){
+      productMatch = promo;
+    } else if(promo.scope === "category" && promo.target === product.category){
+      categoryMatch = promo;
+    } else if(promo.scope === "all" && !EXCLUDE_FROM_ALL_PROMO.includes(product.category)){
+      allMatch = promo;
+    }
   }
-  if(sitePromo.scope === "category" && sitePromo.target === product.category) return sitePromo.priceStr;
-  if(sitePromo.scope === "product" && sitePromo.target === (product.usn || slugifyKey(product.name))) return sitePromo.priceStr;
-  return null;
+
+  const winner = productMatch || categoryMatch || allMatch;
+  return winner ? winner.priceStr : null;
 }
 
 function effectivePrice(product){
@@ -365,7 +381,12 @@ const promoBtn = document.getElementById("promoBtn");
 const promoInput = document.getElementById("promoInput");
 const promoMsg = document.getElementById("promoMsg");
 
-promoBtn.addEventListener("click", async ()=>{
+// Ditaruh di fungsi terpisah biar bisa dipicu dari klik tombol MAUPUN
+// dari tombol "Enter/Go" di keyboard hp. Sebelumnya cuma nyantol ke
+// klik tombol — jadi kalau user pencet "Enter" di keyboard duluan
+// (kebiasaan umum di hp), kelihatannya kayak "gagal", padahal cuma
+// belum ke-trigger sama sekali. Baru pas beneran tap tombolnya jalan.
+async function submitPromoCode(){
   const code = promoInput.value.trim();
 
   if(code.length < 6){
@@ -387,27 +408,44 @@ promoBtn.addEventListener("click", async ()=>{
       body: JSON.stringify({ code })
     });
     const data = await res.json();
+    const inputCodeUpper = code.toUpperCase();
 
     if(data.valid){
-      sitePromo = { scope: data.scope, target: data.target, priceStr: formatRupiah(data.promoPrice) };
+      const alreadyActive = activePromos.some(p => p.code === inputCodeUpper);
 
-      let scopeMsg = "Harga promo otomatis kepasang di semua produk.";
-      if(data.scope === "category"){
-        const label = CATEGORY_LABELS[data.target] || data.target;
-        scopeMsg = `Harga promo otomatis kepasang khusus produk kategori "${label.toUpperCase()}".`;
-      } else if(data.scope === "product"){
-        const matched = PRODUCTS.find(p => slugifyKey(p.name) === data.target);
-        scopeMsg = `Harga promo otomatis kepasang khusus produk "${matched ? matched.name : data.target}".`;
+      if(alreadyActive){
+        promoMsg.textContent = "Kode promo ini sudah aktif.";
+        promoMsg.className = "promo-msg error";
+      } else {
+        activePromos.push({
+          code: inputCodeUpper,
+          scope: data.scope,
+          target: data.target,
+          priceStr: formatRupiah(data.promoPrice)
+        });
+
+        let scopeMsg = "Harga promo otomatis kepasang di semua produk.";
+        if(data.scope === "category"){
+          const label = CATEGORY_LABELS[data.target] || data.target;
+          scopeMsg = `Harga promo otomatis kepasang khusus produk kategori "${label.toUpperCase()}".`;
+        } else if(data.scope === "product"){
+          const matched = PRODUCTS.find(p => slugifyKey(p.name) === data.target);
+          scopeMsg = `Harga promo otomatis kepasang khusus produk "${matched ? matched.name : data.target}".`;
+        }
+
+        promoMsg.textContent = "Kode promo berhasil dipakai! " + scopeMsg;
+        promoMsg.className = "promo-msg success";
+        promoInput.value = "";
       }
-
-      promoMsg.textContent = "Kode promo berhasil dipakai! " + scopeMsg;
-      promoMsg.className = "promo-msg success";
     } else {
-      sitePromo = null;
+      // Kode salah TIDAK menghapus promo yang udah aktif duluan —
+      // dulu ini bug-nya: masukin kode ke-2 yang salah/beda bikin
+      // promo pertama ikut ilang.
       promoMsg.textContent = "Kode promo salah atau sudah tidak berlaku.";
       promoMsg.className = "promo-msg error";
     }
 
+    renderActivePromoList();
     renderProducts(getActiveFilter());
     if(buyOverlay.classList.contains("open") && currentProduct){
       openBuyModal(currentProduct);
@@ -419,7 +457,48 @@ promoBtn.addEventListener("click", async ()=>{
     promoBtn.disabled = false;
     promoBtn.textContent = originalLabel;
   }
+}
+
+promoBtn.addEventListener("click", submitPromoCode);
+promoInput.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter"){
+    e.preventDefault();
+    submitPromoCode();
+  }
 });
+
+// Tampilin semua kode promo yang lagi aktif sekaligus, tiap satu bisa
+// dihapus sendiri-sendiri pake tombol ×.
+function renderActivePromoList(){
+  const listEl = document.getElementById("activePromoList");
+  if(!listEl) return;
+
+  if(!activePromos.length){
+    listEl.innerHTML = "";
+    listEl.style.display = "none";
+    return;
+  }
+
+  listEl.style.display = "flex";
+  listEl.innerHTML = activePromos.map((promo, idx) => `
+    <span class="promo-chip">
+      ${promo.code}
+      <button type="button" class="promo-chip-remove" data-idx="${idx}" aria-label="Hapus kode promo ${promo.code}">×</button>
+    </span>
+  `).join("");
+
+  listEl.querySelectorAll(".promo-chip-remove").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      activePromos.splice(Number(btn.dataset.idx), 1);
+      renderActivePromoList();
+      renderProducts(getActiveFilter());
+      if(buyOverlay.classList.contains("open") && currentProduct){
+        openBuyModal(currentProduct);
+      }
+    });
+  });
+}
+renderActivePromoList();
 
 /* FILTER TABS */
 document.querySelectorAll(".tab").forEach(tab=>{
