@@ -97,6 +97,7 @@
 const PRODUCTS = [
   {
     name: "Script Relapse Bukit",
+    usn: "RELAPSE_BUKIT",
     desc: "CUMA BUTUH 1 SCRIPT AJAH BIAR JADI BUKIT BUKIT - RINGAN DAN SIMPLE",
     price: "Rp 15.000",
     category: "script",
