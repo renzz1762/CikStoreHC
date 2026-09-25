@@ -25,6 +25,14 @@ const SALURAN_LIST = [
   { name: "TikTok", link: "https://tiktok.com/@cikhub_", icon: "tiktok" } // <-- GANTI link
 ];
 
+// 5) Daftar Website & Aplikasi (buat menu "Website & App" di navigasi atas & bawah)
+//    - Sekarang dipindah ke file PROMOSI/websiteApp.js (variabel WEBSITE_APP_LIST),
+//      pastikan file itu dimuat SEBELUM main.js di index.html.
+
+// 6) Komentar/chat admin (buat menu "Chat" di navigasi atas & bawah)
+//    - Daftar chat-nya sekarang ada di file terpisah chatown.js (ADMIN_CHAT_LIST),
+//      pastikan file itu dimuat SEBELUM main.js di index.html.
+
 /* ============================================================
    Logic — tidak perlu diedit
    (PRODUCTS diambil dari product.js, pastikan file itu dimuat
@@ -158,6 +166,77 @@ function handleImgError(imgEl){
 
 const CATEGORY_LABELS = { script: "SCRIPT", bahan: "Bahan", bahan_map: "BAHAN MAP", kit: "KIT", CC: "COLORING HD", jasa: "JASA" };
 
+// Banner "LIMITED" + "U" ala item Unique di Roblox — dipake di kartu produk
+// kalau field "limited" di product.js diisi true. Contoh produk di product.js:
+//   {
+//     name: "...",
+//     limited: true,                 // wajib true biar fitur ini aktif
+//     limitedDate: "2026-01-15",     // (opsional) mulai tanggal berapa jadi Limited. Kosongin ATAU diisi tanggal hari ini/yang udah lewat = langsung aktif SEKARANG.
+//     offSaleDate: "2026-03-01",     // (opsional) mulai tanggal berapa jadi OFF SALE. Kosongin = gak pernah off sale otomatis lewat tanggal.
+//     offSale: true,                 // (opsional) shortcut: langsung OFF SALE SEKARANG juga, gak perlu isi offSaleDate.
+//   }
+// Selama status-nya "limited" ATAU "offsale", tombol beli otomatis dimatiin (gak bisa dibeli):
+//   - status "limited" -> tombol jadi "LIMITED"
+//   - status "offsale" -> tombol jadi "OFF SALE"
+const LIMITED_BADGE_MEDIA = `<span class="limited-banner"><span class="limited-tag"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 5.5 6 .9-4.3 4.3 1 6-5.7-3-5.7 3 1-6L3 8.4l6-.9z"/></svg> Limited</span><span class="limited-u">U</span></span>`;
+const OFFSALE_BADGE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 8l8 8M16 8l-8 8"/></svg>`;
+
+// Format tanggal singkat buat caption di badge Limited/Off Sale, misal "15 Jan 2026".
+function formatTanggalSingkat(date){
+  const tgl = date.getDate();
+  const bulan = BULAN_ID[date.getMonth()].slice(0, 3);
+  const tahun = date.getFullYear();
+  return `${tgl} ${bulan} ${tahun}`;
+}
+
+// Hitung status Limited/Off Sale 1 produk berdasarkan tanggal limitedDate & offSaleDate.
+// Return null (normal), atau { status: "limited"|"offsale", date: Date|null }
+// Hitung status Limited/Off Sale 1 produk berdasarkan tanggal limitedDate & offSaleDate.
+// Return null (belum ada fitur ini aktif), atau
+// { status: "upcoming"|"limited"|"offsale", date: Date|null }
+//   - "upcoming" -> belum masuk tanggal limitedDate: badge & catatan tanggal tetep MUNCUL
+//                   (kasih tau bakal jadi Limited kapan), tapi produk MASIH BISA DIBELI.
+//   - "limited"  -> udah masuk tanggal limitedDate (atau limited:true tanpa limitedDate
+//                   = langsung aktif): gak bisa dibeli, tombol jadi "LIMITED".
+//   - "offsale"  -> udah lewat offSaleDate: gak bisa dibeli, tombol jadi "OFF SALE".
+function getLimitedStatus(product){
+  if(!product.limited) return null;
+  const now = Date.now();
+
+  const limitedAt = product.limitedDate ? new Date(product.limitedDate) : null;
+  const offSaleAt = product.offSaleDate ? new Date(product.offSaleDate) : null;
+  // Shortcut: "offSale: true" = langsung OFF SALE dari sekarang, gak perlu isi offSaleDate.
+  const offSaleNow = product.offSale === true;
+
+  if(offSaleNow || (offSaleAt && !isNaN(offSaleAt.getTime()) && now >= offSaleAt.getTime())){
+    return { status: "offsale", date: offSaleAt && !isNaN(offSaleAt.getTime()) ? offSaleAt : new Date() };
+  }
+  if(limitedAt && !isNaN(limitedAt.getTime()) && now < limitedAt.getTime()){
+    return { status: "upcoming", date: limitedAt }; // badge tetep nongol, tapi masih bisa dibeli
+  }
+  return { status: "limited", date: limitedAt };
+}
+
+function limitedBadgeFor(limitedInfo){
+  if(!limitedInfo) return "";
+  if(limitedInfo.status === "offsale"){
+    return `<span class="limited-banner offsale-banner"><span class="limited-tag offsale-tag">${OFFSALE_BADGE_SVG} Off Sale</span><span class="limited-u">U</span></span>`;
+  }
+  return LIMITED_BADGE_MEDIA;
+}
+
+function limitedStatusNote(limitedInfo){
+  if(!limitedInfo) return "";
+  if(limitedInfo.status === "offsale"){
+    return `<div class="limited-status-note offsale-note">Off Sale sejak ${formatTanggalSingkat(limitedInfo.date)}</div>`;
+  }
+  if(limitedInfo.status === "upcoming"){
+    return `<div class="limited-status-note upcoming-note">Limited mulai ${formatTanggalSingkat(limitedInfo.date)}</div>`;
+  }
+  if(limitedInfo.date) return `<div class="limited-status-note">Limited sejak ${formatTanggalSingkat(limitedInfo.date)}</div>`;
+  return `<div class="limited-status-note">Limited — stok gak dijual lagi</div>`;
+}
+
 /* ============================================================
    COMING SOON — status & jam rilis diambil dari Netlify Function,
    yang bacanya dari Environment Variables COMINGSOON_PRODUCT_<KEY>.
@@ -243,6 +322,11 @@ function renderProducts(filter){
     const comingSoon = getComingSoonInfo(p);
     const promoPrice = getPromoPriceFor(p);
     const isJasa = p.category === "jasa";
+    // Limited & Off Sale itu 2 status BEDA (liat getLimitedStatus), tapi dua-duanya
+    // sama-sama bikin produk gak bisa dibeli. Status "upcoming" (belum masuk limitedDate)
+    // beda sendiri: badge & catatan tanggalnya tetep MUNCUL, tapi MASIH BISA DIBELI.
+    const limitedInfo = comingSoon ? null : getLimitedStatus(p);
+    const isBlocked = !!limitedInfo && limitedInfo.status !== "upcoming";
 
     const card = document.createElement("div");
     card.className = "card" + (comingSoon ? " coming-soon-card" : "");
@@ -251,15 +335,17 @@ function renderProducts(filter){
         <span class="badge">${catLabel}</span>
         ${p.isNew && !comingSoon ? '<span class="new-badge">NEW</span>' : ''}
         ${p.popular && !comingSoon ? POPULAR_BADGE_MEDIA : ''}
+        ${limitedBadgeFor(limitedInfo)}
         ${media}
       </div>
       <div class="card-body">
         <h3>
           ${p.name}
-          <svg class="verified-badge" viewBox="0 0 24 24" fill="#1478d4"><path d="M12 2l2.4 1.3 2.7-.4 1.3 2.4 2.4 1.3-.4 2.7 1.3 2.4L20.4 13l.4 2.7-2.4 1.3-1.3 2.4-2.7-.4L12 20.4l-2.4-1.3-2.7.4-1.3-2.4-2.4-1.3.4-2.7L2.2 11l1.3-2.4-.4-2.7 2.4-1.3L6.8 2.2l2.7.4z"/><path d="M9 12.2l2 2 4-4.4" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg class="verified-badge" viewBox="0 0 24 24" fill="#3b9cff"><path d="M12 2l2.4 1.3 2.7-.4 1.3 2.4 2.4 1.3-.4 2.7 1.3 2.4L20.4 13l.4 2.7-2.4 1.3-1.3 2.4-2.7-.4L12 20.4l-2.4-1.3-2.7.4-1.3-2.4-2.4-1.3.4-2.7L2.2 11l1.3-2.4-.4-2.7 2.4-1.3L6.8 2.2l2.7.4z"/><path d="M9 12.2l2 2 4-4.4" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </h3>
         <p>${p.desc}</p>
         ${engineBadgesFor(p.engines) ? `<div class="engine-badges">${engineBadgesFor(p.engines)}</div>` : ""}
+        ${limitedStatusNote(limitedInfo)}
         <div class="card-foot${isJasa ? " jasa-foot" : ""}">
           ${isJasa ? "" : `
           <div class="price-wrap">
@@ -272,7 +358,7 @@ function renderProducts(filter){
               <span class="price-alt">atau ${shortPrice(p.price)}</span>
             `}
           </div>`}
-          <button class="buy-btn" data-idx="${PRODUCTS.indexOf(p)}" ${comingSoon ? "disabled" : ""}>${comingSoon ? "Segera" : (isJasa ? "Lihat" : "Beli")}</button>
+          <button class="buy-btn${limitedInfo && limitedInfo.status === "offsale" ? " off-sale" : (limitedInfo && limitedInfo.status === "limited" ? " limited-btn" : "")}" data-idx="${PRODUCTS.indexOf(p)}" ${comingSoon || isBlocked ? "disabled" : ""}>${comingSoon ? "Segera" : (limitedInfo && limitedInfo.status === "offsale" ? "OFF SALE" : (limitedInfo && limitedInfo.status === "limited" ? "LIMITED" : (isJasa ? "Lihat" : "Beli")))}</button>
         </div>
       </div>
       ${comingSoon ? `
@@ -556,7 +642,7 @@ document.addEventListener("click", (e)=>{
 
 /* PROFILE MODAL */
 const profileOverlay = document.getElementById("profileOverlay");
-document.getElementById("profileName").innerHTML = `${OWNER_NAME} <svg class="verified-badge" viewBox="0 0 24 24" fill="#1478d4"><path d="M12 2l2.4 1.3 2.7-.4 1.3 2.4 2.4 1.3-.4 2.7 1.3 2.4L20.4 13l.4 2.7-2.4 1.3-1.3 2.4-2.7-.4L12 20.4l-2.4-1.3-2.7.4-1.3-2.4-2.4-1.3.4-2.7L2.2 11l1.3-2.4-.4-2.7 2.4-1.3L6.8 2.2l2.7.4z"/><path d="M9 12.2l2 2 4-4.4" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+document.getElementById("profileName").innerHTML = `${OWNER_NAME} <svg class="verified-badge" viewBox="0 0 24 24" fill="#3b9cff"><path d="M12 2l2.4 1.3 2.7-.4 1.3 2.4 2.4 1.3-.4 2.7 1.3 2.4L20.4 13l.4 2.7-2.4 1.3-1.3 2.4-2.7-.4L12 20.4l-2.4-1.3-2.7.4-1.3-2.4-2.4-1.3.4-2.7L2.2 11l1.3-2.4-.4-2.7 2.4-1.3L6.8 2.2l2.7.4z"/><path d="M9 12.2l2 2 4-4.4" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 document.getElementById("profileRole").textContent = OWNER_ROLE;
 document.getElementById("profileBio").textContent = OWNER_BIO;
 document.getElementById("profilePhoto").src = OWNER_PHOTO;
@@ -565,6 +651,111 @@ document.getElementById("profileChatBtn").href = waLink("Halo, saya mau tanya-ta
 document.getElementById("profileNavBtn").addEventListener("click", ()=> profileOverlay.classList.add("open"));
 document.getElementById("profileClose").addEventListener("click", ()=> profileOverlay.classList.remove("open"));
 profileOverlay.addEventListener("click", (e)=>{ if(e.target === profileOverlay) profileOverlay.classList.remove("open"); });
+
+/* MODAL DAFTAR WEBSITE & APLIKASI */
+const WEBAPP_ICON_GLOBE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.8 5.8 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.8-3.8-9S9.5 5.5 12 3z"/></svg>`;
+const WEBAPP_ICON_APP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M11 18h2"/></svg>`;
+const WEBAPP_ICON_ARROW = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>`;
+
+function webAppIconFor(type){
+  const t = (type || "").toLowerCase();
+  if(t.includes("app") || t.includes("aplikasi")) return WEBAPP_ICON_APP;
+  return WEBAPP_ICON_GLOBE;
+}
+
+function renderWebsiteAppList(){
+  const listEl = document.getElementById("websiteAppList");
+  if(!listEl) return;
+
+  if(!WEBSITE_APP_LIST.length){
+    listEl.innerHTML = `<li class="webapp-item"><div class="webapp-info"><span class="webapp-desc">Belum ada website/aplikasi yang ditambahin. Tinggal isi array WEBSITE_APP_LIST di PROMOSI/websiteApp.js.</span></div></li>`;
+    return;
+  }
+
+  listEl.innerHTML = WEBSITE_APP_LIST.map((item, idx) => `
+    <li class="webapp-item" style="animation-delay:${idx * 90}ms">
+      <span class="webapp-icon">${webAppIconFor(item.type)}</span>
+      <div class="webapp-info">
+        <span class="webapp-name">${item.name}</span>
+        ${item.desc ? `<span class="webapp-desc">${item.desc}</span>` : ""}
+        ${item.type ? `<span class="webapp-type">${item.type.toUpperCase()}</span>` : ""}
+      </div>
+      <a class="btn btn-ghost webapp-btn" target="_blank" rel="noopener" href="${item.link}">Buka ${WEBAPP_ICON_ARROW}</a>
+    </li>`).join("");
+}
+renderWebsiteAppList();
+
+const websiteOverlay = document.getElementById("modalWebsiteOverlay");
+function openWebsiteModal(){ if(websiteOverlay) websiteOverlay.classList.add("open"); }
+
+const navWebsiteBtn = document.getElementById("navWebsiteBtn");
+if(navWebsiteBtn) navWebsiteBtn.addEventListener("click", openWebsiteModal);
+
+const websiteNavBtn = document.getElementById("websiteNavBtn");
+if(websiteNavBtn) websiteNavBtn.addEventListener("click", ()=>{
+  openWebsiteModal();
+  infoPopoverEl.classList.remove("open");
+  document.querySelectorAll(".bn-item").forEach(i=>i.classList.remove("active"));
+  websiteNavBtn.classList.add("active");
+});
+
+const modalWebsiteClose = document.getElementById("modalWebsiteClose");
+if(modalWebsiteClose) modalWebsiteClose.addEventListener("click", ()=> websiteOverlay.classList.remove("open"));
+if(websiteOverlay) websiteOverlay.addEventListener("click", (e)=>{ if(e.target === websiteOverlay) websiteOverlay.classList.remove("open"); });
+
+/* MODAL CHAT — komentar pin dari admin/owner, pake foto dari PPIMG/ */
+function renderAdminComment(){
+  const list = document.getElementById("adminChatList");
+  if(!list) return;
+
+  if(typeof ADMIN_CHAT_LIST === "undefined" || !ADMIN_CHAT_LIST.length){
+    list.innerHTML = `<p class="modal-note" style="margin:0;">Belum ada chat. Tinggal isi array ADMIN_CHAT_LIST di chatown.js.</p>`;
+    return;
+  }
+
+  list.innerHTML = ADMIN_CHAT_LIST.map((chat, idx) => `
+    <div class="admin-comment" style="animation-delay:${idx * 140}ms">
+      <span class="admin-comment-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.4-3.6 4.4-5.5 7.5-5.5s6.1 1.9 7.5 5.5"/></svg>
+        <img src="${chat.photo || "PPIMG/owner.png"}" alt="Foto ${chat.name || "Admin"}" onerror="this.style.display='none'">
+      </span>
+      <div class="admin-comment-body">
+        <div class="admin-comment-head">
+          <span class="admin-comment-name">${chat.name || OWNER_NAME}</span>
+          <span class="admin-comment-tag">OWNER</span>
+          <span class="admin-comment-time">${chat.time || ""}</span>
+        </div>
+        <p class="admin-comment-bubble">${chat.text || ""}</p>
+      </div>
+    </div>
+  `).join("");
+}
+renderAdminComment();
+
+const chatOverlay = document.getElementById("modalChatOverlay");
+function openChatModal(){
+  if(!chatOverlay) return;
+  renderAdminComment(); // render ulang tiap dibuka biar animasinya replay
+  chatOverlay.classList.add("open");
+}
+
+const navChatBtn = document.getElementById("navChatBtn");
+if(navChatBtn) navChatBtn.addEventListener("click", openChatModal);
+
+const chatNavBtn = document.getElementById("chatNavBtn");
+if(chatNavBtn) chatNavBtn.addEventListener("click", ()=>{
+  openChatModal();
+  infoPopoverEl.classList.remove("open");
+  document.querySelectorAll(".bn-item").forEach(i=>i.classList.remove("active"));
+  chatNavBtn.classList.add("active");
+});
+
+const modalChatClose = document.getElementById("modalChatClose");
+if(modalChatClose) modalChatClose.addEventListener("click", ()=> chatOverlay.classList.remove("open"));
+if(chatOverlay) chatOverlay.addEventListener("click", (e)=>{ if(e.target === chatOverlay) chatOverlay.classList.remove("open"); });
+
+const modalChatBtn = document.getElementById("modalChatBtn");
+if(modalChatBtn) modalChatBtn.href = waLink("Halo, saya mau tanya-tanya soal CIK STORE.");
 
 /* BOTTOM NAV — status aktif */
 document.querySelectorAll(".bn-item[data-target]").forEach(item=>{

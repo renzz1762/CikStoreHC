@@ -116,6 +116,9 @@ const PRODUCTS = [
     category: "kit",
     img: "PRODUCT/HangoutKit.png",
     isNew: true,
+    limited: true,
+    offSale: true,
+    offSaleDate: '2026-09-25',
     popular: true,
     engines: ["studio", "lite"],
     features: [
@@ -136,6 +139,8 @@ const PRODUCTS = [
     category: "bahan_map",
     img: "PRODUCT/HangoutKitV2.png",
     isNew: true,
+    limited: true,
+    limitedDate: '2026-10-25',
     popular: true,
     engines: ["studio", "lite"],
     features: [
