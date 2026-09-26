@@ -150,6 +150,27 @@ const PRODUCTS = [
       "File rapi, gampang di-custom ulang"
     ]
   },
+    {
+    // Contoh produk buat testing fitur "Coming Soon".
+    // KEY otomatis dari nama ini = OVERHEAD_KIT
+    // Set env var COMINGSOON_PRODUCT_OVERHEAD_KIT di Netlify buat nyoba.
+    // Kalau produknya udah gak "coming soon" lagi / gak dipake, hapus aja objek ini.
+    name: "FHISING KIT SIMPLE",
+    usn: "FHISING_KIT",
+    desc: "FHISING KIT FITUR LENGKAP - SIMPLE DAN RINGAN",
+    price: "Rp 35.000",
+    category: "bahan_map",
+    img: "PRODUCT/FhisingKit.png",
+    isNew: true,
+    limited: true,
+    limitedDate: '2026-10-10',
+    engines: ["studio", "lite"],
+    features: [
+      "Kit lengkap siap pakai",
+      "Fitur lengkap, ringan",
+      "Bisa buy rood/pancingan"
+    ]
+  },
   {
     // Contoh produk kategori "jasa" (layanan) — beda dari produk biasa:
     // - GAK pake field "price" & GAK ada tombol "Beli"/QRIS, soalnya
