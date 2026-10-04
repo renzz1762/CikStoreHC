@@ -209,7 +209,7 @@ const PRODUCTS = [
     name: "COLORING HD [AM]",
     usn : "COLORING_HD",
     desc: "COLORING HD / CC HD - SIMPLE DAN BAGUS",
-    price: "Rp 10.000",
+    price: "Rp 5.000",
     category: "CC",
     img: "PRODUCT/Cchd.png",
     isNew: true,
