@@ -28,6 +28,27 @@
      POPULER).
 
    ============================================================
+   FOTO PRODUK (bisa lebih dari 1) + SELLER
+   ============================================================
+   - img boleh STRING (1 foto) atau ARRAY (2 foto / lebih), contoh:
+       img: ["PRODUCT/a-1.jpg", "PRODUCT/a-2.jpg"]
+     Kalau lebih dari 1 foto, kartu produk otomatis dapat tombol geser
+     (panah kiri/kanan + titik) kayak slider testimoni, dan bisa digeser
+     pakai jari.
+   - seller (opsional): nama penjual produk. KOSONG = produk dari owner
+     (CikRorw) + centang biru. Isi nama lain (misal seller: "Budi") kalau
+     produknya bukan dari CikRorw -> tampil tanpa centang biru.
+     sellerPhoto (opsional): foto seller lain.
+
+   ============================================================
+   TERJUAL (jumlah produk yang udah laku)
+   ============================================================
+   - sold: angka, contoh  sold: 25   -> di kartu muncul "Terjual 25"
+     (boleh juga teks, contoh sold: "1,2rb")
+   - Update angkanya manual di sini tiap ada penjualan baru, terus
+     upload/redeploy. Hapus field sold kalau gak mau nampilin.
+
+   ============================================================
    FITUR "COMING SOON" (produk belum rilis)
    ============================================================
    Status coming soon & jam/tanggal rilis produk DIATUR DARI SERVER
@@ -96,11 +117,30 @@
 
 const PRODUCTS = [
   {
+    name: "Hangout Kit V3 - KECHE",
+    usn: "HANGOUT_KIT_V3",
+    desc: "HANGOUT KIT V3 KECHE - MUSIC, DONASI, FREE AVATAR, TAS, ADMIN PANEL DAN SETTING GRAFIK",
+    price: "Rp 45.000", // <-- GANTI sesuai harga asli
+    category: "kit",
+    sold: 0, // <-- UPDATE jumlah terjual di sini
+    img: ["PRODUCT/HangoutKitV3-1.jpg", "PRODUCT/HangoutKitV3-2.jpg"],
+    isNew: true,
+    engines: ["studio", "lite"],
+    features: [
+      "Music player (Lofi Chill, favorit, cari lagu)",
+      "Donasi (Kecil / Sedang / Besar)",
+      "Free Avatar (cari ID/username, cowok & cewek)",
+      "Tas 30 slot + hotbar 9 slot",
+      "Admin panel (ubah level player) + Setting grafik"
+    ]
+  },
+  {
     name: "Script Relapse Bukit",
     usn: "SCRIPT_BUKIT",
     desc: "CUMA BUTUH 1 SCRIPT AJAH BIAR JADI BUKIT BUKIT - RINGAN DAN SIMPLE",
     price: "Rp 15.000",
     category: "script",
+    sold: 87, // <-- UPDATE jumlah terjual di sini
     img: "PRODUCT/RelapseBukit.png",
     isNew: true,
     engines: ["studio", "lite"],
@@ -115,6 +155,7 @@ const PRODUCTS = [
     desc: "HANGOUT KIT SIMPLE DAN RINGAN SIMPLE FULL FITUR",
     price: "Rp 20.000",
     category: "kit",
+    sold: 129, // <-- UPDATE jumlah terjual di sini
     img: "PRODUCT/HangoutKit.png",
     isNew: true,
     limited: true,
@@ -138,10 +179,10 @@ const PRODUCTS = [
     desc: "HANGOUT KIT V2-OVERHEAD BAGUS RINGAN DAN SIMPLE",
     price: "Rp 15.000",
     category: "bahan_map",
+    sold: 271, // <-- UPDATE jumlah terjual di sini
     img: "PRODUCT/HangoutKitV2.png",
     isNew: true,
     limited: true,
-    limitedDate: '2026-10-25',
     popular: true,
     engines: ["studio", "lite"],
     features: [
@@ -160,6 +201,7 @@ const PRODUCTS = [
     desc: "FHISING KIT FITUR LENGKAP - SIMPLE DAN RINGAN",
     price: "Rp 35.000",
     category: "bahan_map",
+    sold: 52, // <-- UPDATE jumlah terjual di sini
     img: "PRODUCT/FhisingKit.png",
     isNew: true,
     limited: true,
@@ -183,9 +225,9 @@ const PRODUCTS = [
     name: "Jasa Custom Script & Kit",
     desc: "BUTUH SCRIPT ATAU KIT YANG DIBUAT KHUSUS SESUAI KEBUTUHAN? CEK DAFTAR LAYANANNYA DI SINI.",
     category: "jasa",
+    sold: 126, // <-- UPDATE jumlah terjual di sini
     img: "JASAIMG/JasaCustom.png",
     isNew: true,
-    popular: true,
     engines: ["studio", "lite"],
     services: [
       { name: "Custom Script Sederhana", desc: "Script simple sesuai request, 1-2 fungsi.", price: "Rp ???" },
@@ -197,6 +239,7 @@ const PRODUCTS = [
     name: "Jasa Bikin Website & Apk",
     desc: "BUTUH WEBSITE ATAU APK YANG DIBUAT KHUSUS SESUAI KEBUTUHAN? CEK DAFTAR LAYANANNYA DI SINI.",
     category: "jasa",
+    sold: 12, // <-- UPDATE jumlah terjual di sini
     img: "JASAIMG/CostumApk.png",
     isNew: true,
     popular: true,
@@ -211,6 +254,7 @@ const PRODUCTS = [
     desc: "COLORING HD / CC HD - SIMPLE DAN BAGUS",
     price: "Rp 5.000",
     category: "CC",
+    sold: 44, // <-- UPDATE jumlah terjual di sini
     img: "PRODUCT/Cchd.png",
     isNew: true,
     features: [

@@ -44,7 +44,7 @@
 
 <section class="hero">
   <div class="wrap hero-grid">
-    <div class="hero-banner">
+    <div class="hero-banner" style="--banner-img:url('BANNERIMG/banner.jpg')">
       <div class="tag-row">
         <span class="tag">SCRIPT & BAHAN WEBSITE</span>
         <span class="tag">READY</span>
@@ -331,26 +331,19 @@
   </div>
 </div>
 
-<!-- OVERLAY BLACKLIST (muncul saat masuk website) -->
-<div class="modal-overlay" id="blacklistOverlay" role="dialog" aria-modal="true" aria-labelledby="blacklistTitle">
-  <div class="modal bl-modal">
-    <button class="modal-close" id="blacklistClose" aria-label="Tutup">✕</button>
-    <div class="bl-head">
-      <span class="bl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg></span>
-      <h3 id="blacklistTitle">Hati-hati dengan saluran ini</h3>
+<!-- OVERLAY FOLLOW (muncul saat masuk website) -->
+<div class="modal-overlay" id="followOverlay" role="dialog" aria-modal="true" aria-labelledby="followTitle">
+  <div class="modal follow-modal">
+    <button class="modal-close" id="followClose" aria-label="Tutup">✕</button>
+    <div class="follow-head">
+      <span class="follow-ava"><img src="OWNERIMG/owner.png" alt="CikRorw" onerror="this.style.display='none'"></span>
+      <div>
+        <h3 id="followTitle">Follow CikRorw dulu yuk!</h3>
+        <p class="follow-sub">Biar gak ketinggalan info produk baru, promo & kode promo.</p>
+      </div>
     </div>
-    <p class="bl-lead">Dua saluran WhatsApp di bawah ini kami masukkan ke daftar blacklist.</p>
-    <div class="bl-pair" id="blacklistPair"></div>
-    <ul class="bl-points">
-      <li><b>Asset berbayar dibagikan gratis.</b> Script dan asset yang aslinya dijual oleh kreatornya disebarkan tanpa izin.</li>
-      <li><b>Kreator dirugikan.</b> Kalau kamu mau jual asset berbayar, hati-hati: bisa saja dibagikan gratis di saluran seperti ini.</li>
-      <li><b>Beli dari sumber resmi.</b> Kamu dapat file lengkap, update, dan bantuan langsung dari penjualnya.</li>
-    </ul>
-    <p class="bl-disclaimer">Daftar ini berdasarkan temuan tim CIK STORE. Kalau kamu pemilik saluran dan merasa ada yang keliru, hubungi owner lewat tombol Chat.</p>
-    <div class="bl-actions">
-      <button class="btn btn-primary" id="blacklistOk">Oke, saya mengerti</button>
-      <button class="btn btn-ghost" id="blacklistMore">Lihat daftar blacklist</button>
-    </div>
+    <div class="follow-list" id="followList"></div>
+    <button class="btn btn-ghost follow-skip" id="followSkip">Nanti aja</button>
   </div>
 </div>
 
@@ -409,5 +402,6 @@
 <script src="chatown.js"></script>
 <script src="blacklist.js"></script>
 <script src="main.js"></script>
+<script src="follow.js"></script>
 </body>
 </html>

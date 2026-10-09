@@ -35,7 +35,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 ::selection{background:rgba(255,31,61,.28);color:var(--ink);}
-html{scroll-behavior:smooth;overflow-x:hidden;}
+html{scroll-behavior:smooth;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
 body{
   background-color:var(--bg);
   background-image:
@@ -130,6 +130,9 @@ header{
   border:var(--bw) solid var(--ink);border-radius:20px;box-shadow:6px 6px 0 var(--ink);
   padding:36px;color:var(--ink);display:flex;flex-direction:column;justify-content:center;
   position:relative;overflow:hidden;min-height:340px;
+  background:
+    linear-gradient(100deg, rgba(255,255,255,.93) 0%, rgba(255,255,255,.78) 48%, rgba(255,255,255,.25) 100%),
+    var(--banner-img) center/cover no-repeat, var(--surface);
 }
 .hero-banner::before{
   content:'CIK';position:absolute;top:-6px;right:12px;z-index:0;
@@ -223,7 +226,7 @@ h1.headline{
 .tab.active{background:var(--red);color:#fff;box-shadow:2px 2px 0 var(--ink);}
 
 /* ---------- PRODUCT GRID ---------- */
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding:20px 0 76px;}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;padding:20px 0 76px;}
 .card{
   background:var(--surface);border:var(--bw) solid var(--ink);border-radius:14px;box-shadow:var(--shadow-hard);
   overflow:hidden;display:flex;flex-direction:column;position:relative;
@@ -627,7 +630,7 @@ footer{border-top:var(--bw) solid var(--ink);padding:36px 0 96px;background:var(
 /* ---------- RESPONSIVE ---------- */
 @media (max-width:860px){
   .hero-grid{grid-template-columns:1fr;}
-  .grid{grid-template-columns:repeat(3,1fr);}
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr));}
   .steps-grid{grid-template-columns:repeat(2,1fr);}
   .features-row{grid-template-columns:1fr;}
   .nav-links{display:none;}
@@ -636,7 +639,7 @@ footer{border-top:var(--bw) solid var(--ink);padding:36px 0 96px;background:var(
 }
 @media (max-width:560px){
   .wrap{padding:0 20px;}
-  .grid{grid-template-columns:repeat(2,1fr);gap:12px;}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
   .steps-grid{grid-template-columns:1fr;}
   .section-head{padding:18px;border-radius:16px;}
   .hero-banner{padding:26px;border-radius:16px;}
@@ -683,3 +686,138 @@ footer{border-top:var(--bw) solid var(--ink);padding:36px 0 96px;background:var(
   .bl-pair{gap:8px;}
   .bl-pair-item figcaption{font-size:10px;padding:6px;}
 }
+
+
+/* =========================================================
+   FIX KARTU PRODUK — tampilan sama di semua HP
+   Masalah lama: ukuran teks/badge pakai px tetap, jadi di HP yang
+   "display size"/font-nya lebih besar kartu jadi sempit lalu badge &
+   teks numpuk ke bawah (kartu jadi panjang). Sekarang tiap kartu jadi
+   "container" dan ukuran isinya ikut lebar kartu (cqw), plus teks
+   dibatasi baris & badge gak boleh numpuk.
+   ========================================================= */
+.card{container-type:inline-size;min-width:0;}
+.card-body{min-width:0;padding:clamp(8px,6cqw,14px);gap:clamp(4px,3cqw,6px);}
+.card-body h3{
+  font-size:14.5px;font-size:clamp(11px,7.9cqw,14.5px);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;
+}
+.card-body p{
+  font-size:12px;font-size:clamp(9.5px,6.5cqw,12px);line-height:1.4;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;flex:0 1 auto;
+}
+.card-body{justify-content:flex-start;}
+.card-body .card-foot{margin-top:auto;padding-top:clamp(2px,2cqw,6px);}
+.card-media{aspect-ratio:4/3;}
+
+.badge,.new-badge,.popular-badge{
+  font-size:10px;font-size:clamp(8px,5.4cqw,10px);
+  padding:clamp(2px,2cqw,4px) clamp(4px,4.4cqw,8px);border-radius:7px;white-space:nowrap;
+  top:clamp(5px,4.4cqw,8px);
+}
+.badge{left:clamp(5px,4.4cqw,8px);}
+.new-badge{right:clamp(5px,4.4cqw,8px);}
+.popular-badge{top:calc(clamp(5px,4.4cqw,8px) + clamp(18px,17cqw,28px));right:clamp(5px,4.4cqw,8px);gap:3px;}
+.popular-badge svg{width:1.1em;height:1.1em;}
+.limited-banner{left:clamp(5px,4.4cqw,8px);bottom:clamp(5px,4.4cqw,8px);}
+.limited-tag{font-size:9.5px;font-size:clamp(7.5px,5.2cqw,9.5px);padding:clamp(2px,2cqw,4px) clamp(4px,4cqw,8px) clamp(2px,2cqw,4px) clamp(3px,3cqw,6px);white-space:nowrap;}
+.limited-u{font-size:10.5px;font-size:clamp(8px,5.7cqw,10.5px);min-width:clamp(14px,11cqw,20px);}
+
+.engine-badges{flex-wrap:wrap;gap:clamp(3px,2.6cqw,6px);margin-top:clamp(2px,2cqw,6px);}
+.engine-badge{
+  font-size:10px;font-size:clamp(8px,5.4cqw,10px);padding:clamp(2px,2cqw,4px) clamp(5px,4.6cqw,9px);gap:clamp(2px,2.6cqw,5px);white-space:nowrap;
+}
+.engine-badge svg{width:1.2em;height:1.2em;}
+.limited-status-note{font-size:10px;font-size:clamp(8px,5.4cqw,10px);line-height:1.35;}
+
+.price{font-size:13.5px;font-size:clamp(10.5px,7.4cqw,13.5px);white-space:nowrap;}
+.price.struck,.price-promo-card{font-size:clamp(10px,6.6cqw,13.5px);white-space:nowrap;}
+.price-alt{font-size:11px;font-size:clamp(9px,6cqw,11px);white-space:nowrap;}
+.buy-btn{
+  font-size:11px;font-size:clamp(9px,6cqw,11px);padding:clamp(5px,3.8cqw,7px) clamp(8px,6.6cqw,12px);
+  white-space:nowrap;flex-shrink:0;
+}
+.card-foot{flex-wrap:nowrap;}
+.price-wrap{min-width:0;}
+
+/* ---------- SLIDER FOTO PRODUK ---------- */
+.card-media .pslider{position:absolute;inset:0;}
+.pslider-track{
+  display:flex;width:100%;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none;
+}
+.pslider-track::-webkit-scrollbar{display:none;}
+.pslide{flex:0 0 100%;width:100%;height:100%;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;}
+.pslide img{width:100%;height:100%;object-fit:contain;object-position:center;-webkit-user-drag:none;user-select:none;}
+.pslider-nav{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:clamp(20px,14cqw,28px);height:clamp(20px,14cqw,28px);border-radius:50%;
+  border:var(--bw) solid var(--ink);background:var(--surface);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;
+  box-shadow:2px 2px 0 var(--ink);transition:background .15s ease;
+}
+.pslider-nav svg{width:58%;height:58%;}
+.pslider-nav:hover{background:var(--red);color:#fff;}
+.pslider-nav.prev{left:clamp(3px,3cqw,6px);}
+.pslider-nav.next{right:clamp(3px,3cqw,6px);}
+.pslider-nav.is-disabled{opacity:.3;pointer-events:none;}
+.pslider-dots{
+  position:absolute;right:clamp(5px,4.4cqw,8px);bottom:clamp(5px,4.4cqw,8px);z-index:3;
+  display:flex;gap:4px;padding:3px 6px;border-radius:999px;background:rgba(23,16,15,.55);
+}
+.pslider-dot{width:clamp(5px,3.4cqw,7px);height:clamp(5px,3.4cqw,7px);border-radius:50%;background:rgba(255,255,255,.55);transition:all .2s ease;}
+.pslider-dot.active{background:#fff;width:clamp(10px,7cqw,15px);border-radius:999px;}
+/* badge di atas slider tetap bisa diklik slider-nya (badge gak nangkep sentuhan) */
+.card-media .badge,.card-media .new-badge,.card-media .popular-badge,.card-media .limited-banner{pointer-events:none;}
+
+/* ---------- SELLER DI BAWAH PRODUK ---------- */
+.seller{
+  display:flex;align-items:center;gap:clamp(5px,4cqw,8px);min-width:0;
+  margin-top:clamp(4px,3.4cqw,8px);padding-top:clamp(6px,4.6cqw,9px);
+  border-top:var(--bw) dashed var(--line);
+}
+.seller-owner{cursor:pointer;}
+.seller-ava{
+  width:clamp(20px,14.5cqw,28px);height:clamp(20px,14.5cqw,28px);border-radius:50%;flex-shrink:0;position:relative;overflow:hidden;
+  background:var(--ink);border:var(--bw) solid var(--ink);display:flex;align-items:center;justify-content:center;
+}
+.seller-ava img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.seller-ava-fallback{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:11px;color:var(--red-bright);}
+.seller-text{display:flex;flex-direction:column;min-width:0;line-height:1.15;}
+.seller-label{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-size:clamp(7px,4.6cqw,8.5px);font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted-2);}
+.seller-name{
+  display:flex;align-items:center;gap:3px;min-width:0;
+  font-size:12px;font-size:clamp(9.5px,6.6cqw,12px);font-weight:800;color:var(--ink);
+}
+.seller-name .verified-badge{width:1.15em;height:1.15em;flex-shrink:0;}
+.seller-owner:hover .seller-name{color:var(--red-2);}
+
+/* ---------- OVERLAY FOLLOW ---------- */
+.follow-modal{max-width:400px;}
+.follow-head{display:flex;align-items:center;gap:12px;margin:2px 38px 16px 0;}
+.follow-ava{width:52px;height:52px;border-radius:50%;flex-shrink:0;overflow:hidden;background:var(--ink);border:var(--bw) solid var(--ink);box-shadow:3px 3px 0 var(--ink);}
+.follow-ava img{width:100%;height:100%;object-fit:cover;}
+.follow-head h3{font-size:18px;line-height:1.2;margin:0;padding:0;}
+.follow-sub{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.4;}
+.follow-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
+.follow-item{
+  display:flex;align-items:center;gap:12px;padding:12px;border:var(--bw) solid var(--ink);border-radius:14px;
+  background:var(--surface-2);box-shadow:var(--shadow-hard-sm);transition:transform .12s ease, box-shadow .12s ease;
+}
+.follow-item:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink);}
+.follow-icon{width:38px;height:38px;border-radius:11px;}
+.follow-icon svg{width:19px;height:19px;}
+.follow-item-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;}
+.follow-item-text b{font-size:14px;font-weight:800;}
+.follow-item-text small{font-size:11.5px;color:var(--muted);line-height:1.35;}
+.follow-btn{padding:8px 14px;font-size:11px;flex-shrink:0;box-shadow:2px 2px 0 var(--ink);}
+.follow-skip{width:100%;justify-content:center;}
+
+/* ---------- TERJUAL ---------- */
+.sold-note{
+  display:inline-flex;align-items:center;gap:clamp(3px,2.6cqw,5px);align-self:flex-start;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;font-size:clamp(8.5px,5.8cqw,10.5px);font-weight:600;
+  color:var(--muted);white-space:nowrap;
+}
+.sold-note svg{width:1.25em;height:1.25em;color:var(--red-2);flex-shrink:0;}
+.sold-note b{color:var(--ink);font-weight:800;}

@@ -9,13 +9,13 @@
    ============================================================ */
 const ADMIN_CHAT_LIST = [
   {
-    name: "Owner CIK STORE",
+    name: "CikRorw",
     photo: "PPIMG/owner.png",
     time: "2026-09-25 | 8:18",
     text: "Halo! Makasih udah mampir ke CIK STORE 🙌 Kalau ada yang mau ditanyain soal produk sebelum beli, langsung chat aja ya, fast respon kok."
   },
   {
-    name: "Owner CIK STORE",
+    name: "CikRorw",
     photo: "PPIMG/owner.png",
     time: "2026-09-25 | 8:18",
     text: "Buat produk yang ada label LIMITED, stoknya emang udah dibatasin dari awal — begitu status-nya jadi Off Sale, produk itu udah gak dijual lagi ya."

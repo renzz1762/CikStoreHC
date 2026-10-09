@@ -13,7 +13,7 @@ const BANK_INFO = "-------"; // <-- GANTI sesuai rekening kamu
 
 // 3) Profil owner (buat menu Profile di navigasi bawah)
 //    - Taruh foto owner di folder OWNERIMG/ lalu tulis nama filenya di OWNER_PHOTO
-const OWNER_NAME = "Owner CIK STORE"; // <-- GANTI nama kamu
+const OWNER_NAME = "CikRorw"; // <-- GANTI nama kamu
 const OWNER_ROLE = "Penjual Script & Bahan Website"; // <-- GANTI kalau mau
 const OWNER_BIO = "Jual script, source code, dan bahan-bahan website siap pakai. Chat aja kalau ada yang mau ditanyain sebelum beli."; // <-- GANTI bio kamu
 const OWNER_PHOTO = "OWNERIMG/owner.png"; // <-- ganti nama file kalau beda
@@ -22,7 +22,7 @@ const OWNER_PHOTO = "OWNERIMG/owner.png"; // <-- ganti nama file kalau beda
 //    - icon boleh: "channel" atau "tiktok" (sudah disediain ikonnya), atau isi svg sendiri
 const SALURAN_LIST = [
   { name: "Saluran WhatsApp", link: "https://whatsapp.com/channel/0029Vb5aoKwEwEjpsmaQol3A", icon: "channel" }, // <-- GANTI link
-  { name: "TikTok", link: "https://tiktok.com/@cikhub_", icon: "tiktok" } // <-- GANTI link
+  { name: "TikTok", link: "https://www.tiktok.com/@cikhub_01", icon: "tiktok" } // <-- GANTI link
 ];
 
 // 5) Daftar Website & Aplikasi (buat menu "Website & App" di navigasi atas & bawah)
@@ -308,6 +308,102 @@ function startCountdownTicker(){
   }, 1000);
 }
 
+/* ============================================================
+   SLIDER FOTO PRODUK (1 produk bisa lebih dari 1 foto)
+   - field img di product.js boleh string atau array
+   - kalau lebih dari 1 foto: ada panah kiri/kanan + titik + bisa digeser jari
+   ============================================================ */
+const VERIFIED_SVG = `<svg class="verified-badge" viewBox="0 0 24 24" fill="#3b9cff"><path d="M12 2l2.4 1.3 2.7-.4 1.3 2.4 2.4 1.3-.4 2.7 1.3 2.4L20.4 13l.4 2.7-2.4 1.3-1.3 2.4-2.7-.4L12 20.4l-2.4-1.3-2.7.4-1.3-2.4-2.4-1.3.4-2.7L2.2 11l1.3-2.4-.4-2.7 2.4-1.3L6.8 2.2l2.7.4z"/><path d="M9 12.2l2 2 4-4.4" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+function productImages(p){
+  if(Array.isArray(p.img)) return p.img.filter(Boolean);
+  return p.img ? [p.img] : [];
+}
+
+function productMediaHtml(p){
+  const imgs = productImages(p);
+  if(!imgs.length) return fallbackIcon;
+  if(imgs.length === 1) return `<img src="${imgs[0]}" alt="${p.name}" onerror="handleImgError(this)">`;
+  return `
+    <div class="pslider" data-count="${imgs.length}">
+      <div class="pslider-track">
+        ${imgs.map((src, i) => `<div class="pslide"><img src="${src}" alt="${p.name} foto ${i + 1}" loading="lazy" draggable="false" onerror="handleImgError(this)"></div>`).join("")}
+      </div>
+      <button type="button" class="pslider-nav prev is-disabled" aria-label="Foto sebelumnya">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button type="button" class="pslider-nav next" aria-label="Foto berikutnya">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <div class="pslider-dots">${imgs.map((_, i) => `<span class="pslider-dot${i === 0 ? " active" : ""}"></span>`).join("")}</div>
+    </div>`;
+}
+
+function initProductSliders(root){
+  root.querySelectorAll(".pslider").forEach(sl => {
+    const track = sl.querySelector(".pslider-track");
+    const prev = sl.querySelector(".pslider-nav.prev");
+    const next = sl.querySelector(".pslider-nav.next");
+    const dots = sl.querySelectorAll(".pslider-dot");
+    const total = Number(sl.dataset.count) || 1;
+    let idx = 0;
+
+    function sync(){
+      dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+      prev.classList.toggle("is-disabled", idx <= 0);
+      next.classList.toggle("is-disabled", idx >= total - 1);
+    }
+    function go(i){
+      idx = Math.max(0, Math.min(i, total - 1));
+      track.scrollTo({ left: idx * track.clientWidth, behavior: "smooth" });
+      sync();
+    }
+    prev.addEventListener("click", e => { e.stopPropagation(); go(idx - 1); });
+    next.addEventListener("click", e => { e.stopPropagation(); go(idx + 1); });
+
+    let t = null;
+    track.addEventListener("scroll", () => {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        if(!track.clientWidth) return;
+        idx = Math.max(0, Math.min(Math.round(track.scrollLeft / track.clientWidth), total - 1));
+        sync();
+      }, 70);
+    }, { passive: true });
+  });
+}
+
+/* ============================================================
+   SELLER DI BAWAH SETIAP PRODUK
+   - tanpa field "seller" di product.js = produk dari owner (CikRorw) + centang biru
+   - isi seller: "Nama Lain" = produk bukan dari CikRorw (tanpa centang biru)
+   ============================================================ */
+function sellerHtml(p){
+  const isOwner = !p.seller || String(p.seller).trim().toLowerCase() === OWNER_NAME.toLowerCase();
+  const name = isOwner ? OWNER_NAME : p.seller;
+  const photo = isOwner ? OWNER_PHOTO : (p.sellerPhoto || "");
+  const initial = String(name).trim().charAt(0).toUpperCase() || "?";
+  return `
+    <div class="seller${isOwner ? " seller-owner" : ""}"${isOwner ? ' role="button" tabindex="0" title="Lihat profile owner"' : ""}>
+      <span class="seller-ava">
+        <span class="seller-ava-fallback">${initial}</span>
+        ${photo ? `<img src="${photo}" alt="${name}" onerror="this.style.display='none'">` : ""}
+      </span>
+      <span class="seller-text">
+        <span class="seller-label">${isOwner ? "Produk dari" : "Seller"}</span>
+        <span class="seller-name">${name}${isOwner ? VERIFIED_SVG : ""}</span>
+      </span>
+    </div>`;
+}
+
+// Label "Terjual" di kartu produk. Angkanya diisi manual di product.js (field sold).
+// sold: 12 -> "Terjual 12" | sold: "1,2rb" -> "Terjual 1,2rb" | gak diisi -> gak muncul.
+function soldHtml(p){
+  if(p.sold === undefined || p.sold === null || p.sold === "") return "";
+  const val = typeof p.sold === "number" ? p.sold.toLocaleString("id-ID") : p.sold;
+  return `<div class="sold-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>Terjual <b>${val}</b></div>`;
+}
+
 function renderProducts(filter){
   const grid = document.getElementById("productGrid");
   grid.innerHTML = "";
@@ -315,9 +411,7 @@ function renderProducts(filter){
 
   list.forEach((p) => {
     const catLabel = CATEGORY_LABELS[p.category] || p.category;
-    const media = p.img
-      ? `<img src="${p.img}" alt="${p.name}" onerror="handleImgError(this)">`
-      : fallbackIcon;
+    const media = productMediaHtml(p);
 
     const comingSoon = getComingSoonInfo(p);
     const promoPrice = getPromoPriceFor(p);
@@ -339,13 +433,11 @@ function renderProducts(filter){
         ${media}
       </div>
       <div class="card-body">
-        <h3>
-          ${p.name}
-          <svg class="verified-badge" viewBox="0 0 24 24" fill="#3b9cff"><path d="M12 2l2.4 1.3 2.7-.4 1.3 2.4 2.4 1.3-.4 2.7 1.3 2.4L20.4 13l.4 2.7-2.4 1.3-1.3 2.4-2.7-.4L12 20.4l-2.4-1.3-2.7.4-1.3-2.4-2.4-1.3.4-2.7L2.2 11l1.3-2.4-.4-2.7 2.4-1.3L6.8 2.2l2.7.4z"/><path d="M9 12.2l2 2 4-4.4" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </h3>
+        <h3>${p.name}</h3>
         <p>${p.desc}</p>
         ${engineBadgesFor(p.engines) ? `<div class="engine-badges">${engineBadgesFor(p.engines)}</div>` : ""}
         ${limitedStatusNote(limitedInfo)}
+        ${soldHtml(p)}
         <div class="card-foot${isJasa ? " jasa-foot" : ""}">
           ${isJasa ? "" : `
           <div class="price-wrap">
@@ -360,6 +452,7 @@ function renderProducts(filter){
           </div>`}
           <button class="buy-btn${limitedInfo && limitedInfo.status === "offsale" ? " off-sale" : (limitedInfo && limitedInfo.status === "limited" ? " limited-btn" : "")}" data-idx="${PRODUCTS.indexOf(p)}" ${comingSoon || isBlocked ? "disabled" : ""}>${comingSoon ? "Segera" : (limitedInfo && limitedInfo.status === "offsale" ? "OFF SALE" : (limitedInfo && limitedInfo.status === "limited" ? "LIMITED" : (isJasa ? "Lihat" : "Beli")))}</button>
         </div>
+        ${sellerHtml(p)}
       </div>
       ${comingSoon ? `
         <div class="coming-soon-overlay">
@@ -375,6 +468,13 @@ function renderProducts(filter){
   });
 
   document.getElementById("statProduk").textContent = PRODUCTS.length;
+
+  initProductSliders(grid);
+  grid.querySelectorAll(".seller-owner").forEach(el=>{
+    const openProfile = ()=>{ const po = document.getElementById("profileOverlay"); if(po) po.classList.add("open"); };
+    el.addEventListener("click", openProfile);
+    el.addEventListener("keydown", e=>{ if(e.key === "Enter" || e.key === " "){ e.preventDefault(); openProfile(); } });
+  });
 
   grid.querySelectorAll(".buy-btn").forEach(btn=>{
     btn.addEventListener("click", ()=>{
