@@ -171,8 +171,8 @@ const CATEGORY_LABELS = { script: "SCRIPT", bahan: "Bahan", bahan_map: "BAHAN MA
 //   {
 //     name: "...",
 //     limited: true,                 // wajib true biar fitur ini aktif
-//     limitedDate: "2026-01-15",     // (opsional) mulai tanggal berapa jadi Limited. Kosongin ATAU diisi tanggal hari ini/yang udah lewat = langsung aktif SEKARANG.
-//     offSaleDate: "2026-03-01",     // (opsional) mulai tanggal berapa jadi OFF SALE. Kosongin = gak pernah off sale otomatis lewat tanggal.
+//     limitedDate: "2026-10-10 - 11:00", // (opsional) mulai tanggal + JAM (WIB) berapa jadi Limited. Jam boleh dikosongin ("2026-10-10" = mulai 00:00). Kosongin ATAU diisi waktu yang udah lewat = langsung aktif SEKARANG.
+//     offSaleDate: "2026-12-01 - 20:30", // (opsional) mulai tanggal + JAM (WIB) berapa jadi OFF SALE. Kosongin = gak pernah off sale otomatis lewat tanggal.
 //     offSale: true,                 // (opsional) shortcut: langsung OFF SALE SEKARANG juga, gak perlu isi offSaleDate.
 //   }
 // Selama status-nya "limited" ATAU "offsale", tombol beli otomatis dimatiin (gak bisa dibeli):
@@ -181,12 +181,39 @@ const CATEGORY_LABELS = { script: "SCRIPT", bahan: "Bahan", bahan_map: "BAHAN MA
 const LIMITED_BADGE_MEDIA = `<span class="limited-banner"><span class="limited-tag"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 5.5 6 .9-4.3 4.3 1 6-5.7-3-5.7 3 1-6L3 8.4l6-.9z"/></svg> Limited</span><span class="limited-u">U</span></span>`;
 const OFFSALE_BADGE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 8l8 8M16 8l-8 8"/></svg>`;
 
-// Format tanggal singkat buat caption di badge Limited/Off Sale, misal "15 Jan 2026".
-function formatTanggalSingkat(date){
-  const tgl = date.getDate();
-  const bulan = BULAN_ID[date.getMonth()].slice(0, 3);
-  const tahun = date.getFullYear();
-  return `${tgl} ${bulan} ${tahun}`;
+// Parser tanggal+jam buat limitedDate & offSaleDate (semua dianggap WIB / UTC+7).
+// Format yang diterima:
+//   "2026-10-10"             -> tanggal aja (aktif mulai 00:00 WIB)
+//   "2026-10-10 11:00"       -> tanggal + jam
+//   "2026-10-10 - 11:00"     -> sama, boleh pakai strip di tengah
+//   "2026-10-10T11:00"       -> format ISO juga boleh
+// Return { date: Date, hasTime: boolean } atau null kalau kosong / formatnya salah.
+function parseWaktuWIB(raw){
+  if(!raw) return null;
+  if(raw instanceof Date) return isNaN(raw.getTime()) ? null : { date: raw, hasTime: true };
+  const m = String(raw).trim().match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:\s*(?:-|,|T|\s)\s*(\d{1,2})[:.](\d{2}))?$/);
+  if(!m) return null;
+  const [, y, mo, d, h, mi] = m;
+  const hasTime = h !== undefined;
+  const iso = `${y}-${mo.padStart(2,"0")}-${d.padStart(2,"0")}T${(h||"0").padStart(2,"0")}:${mi||"00"}:00+07:00`;
+  const dt = new Date(iso);
+  return isNaN(dt.getTime()) ? null : { date: dt, hasTime };
+}
+
+// Format singkat buat caption di badge Limited/Off Sale (pakai jam WIB),
+// misal "10 Okt 2026" atau "10 Okt 2026 • 11:00 WIB" kalau tanggalnya ada jamnya.
+function formatTanggalSingkat(date, hasTime){
+  const w = new Date(date.getTime() + 7 * 3600 * 1000); // geser ke WIB, baca pakai getUTC*
+  const tgl = w.getUTCDate();
+  const bulan = BULAN_ID[w.getUTCMonth()].slice(0, 3);
+  const tahun = w.getUTCFullYear();
+  let out = `${tgl} ${bulan} ${tahun}`;
+  if(hasTime){
+    const jam = String(w.getUTCHours()).padStart(2, "0");
+    const menit = String(w.getUTCMinutes()).padStart(2, "0");
+    out += ` • ${jam}:${menit} WIB`;
+  }
+  return out;
 }
 
 // Hitung status Limited/Off Sale 1 produk berdasarkan tanggal limitedDate & offSaleDate.
@@ -203,18 +230,48 @@ function getLimitedStatus(product){
   if(!product.limited) return null;
   const now = Date.now();
 
-  const limitedAt = product.limitedDate ? new Date(product.limitedDate) : null;
-  const offSaleAt = product.offSaleDate ? new Date(product.offSaleDate) : null;
+  const limitedP = parseWaktuWIB(product.limitedDate);
+  const offSaleP = parseWaktuWIB(product.offSaleDate);
+  const limitedAt = limitedP ? limitedP.date : null;
+  const offSaleAt = offSaleP ? offSaleP.date : null;
   // Shortcut: "offSale: true" = langsung OFF SALE dari sekarang, gak perlu isi offSaleDate.
   const offSaleNow = product.offSale === true;
 
-  if(offSaleNow || (offSaleAt && !isNaN(offSaleAt.getTime()) && now >= offSaleAt.getTime())){
-    return { status: "offsale", date: offSaleAt && !isNaN(offSaleAt.getTime()) ? offSaleAt : new Date() };
+  if(offSaleNow || (offSaleAt && now >= offSaleAt.getTime())){
+    return offSaleAt
+      ? { status: "offsale", date: offSaleAt, hasTime: offSaleP.hasTime }
+      : { status: "offsale", date: new Date(), hasTime: false };
   }
-  if(limitedAt && !isNaN(limitedAt.getTime()) && now < limitedAt.getTime()){
-    return { status: "upcoming", date: limitedAt }; // badge tetep nongol, tapi masih bisa dibeli
+  if(limitedAt && now < limitedAt.getTime()){
+    return { status: "upcoming", date: limitedAt, hasTime: limitedP.hasTime }; // badge tetep nongol, tapi masih bisa dibeli
   }
-  return { status: "limited", date: limitedAt };
+  return { status: "limited", date: limitedAt, hasTime: limitedP ? limitedP.hasTime : false };
+}
+
+// Cari waktu terdekat (limitedDate / offSaleDate) yang belum lewat, buat jadwalin
+// render ulang otomatis pas status produk berubah (tanpa user refresh).
+function nextLimitedTransition(){
+  const now = Date.now();
+  let next = null;
+  PRODUCTS.forEach(p=>{
+    if(!p.limited) return;
+    [p.limitedDate, p.offSaleDate].forEach(raw=>{
+      const w = parseWaktuWIB(raw);
+      if(w && w.date.getTime() > now && (next === null || w.date.getTime() < next)) next = w.date.getTime();
+    });
+  });
+  return next;
+}
+let limitedTransitionTimer = null;
+function scheduleLimitedTransition(){
+  if(limitedTransitionTimer) clearTimeout(limitedTransitionTimer);
+  const next = nextLimitedTransition();
+  if(next === null) return;
+  // setTimeout maksimal ~24 hari; kalau lebih jauh, cek ulang tiap 24 hari.
+  const delay = Math.min(next - Date.now() + 500, 2147483000);
+  limitedTransitionTimer = setTimeout(()=>{
+    renderProducts(getActiveFilter());
+  }, Math.max(delay, 500));
 }
 
 function limitedBadgeFor(limitedInfo){
@@ -228,12 +285,12 @@ function limitedBadgeFor(limitedInfo){
 function limitedStatusNote(limitedInfo){
   if(!limitedInfo) return "";
   if(limitedInfo.status === "offsale"){
-    return `<div class="limited-status-note offsale-note">Off Sale sejak ${formatTanggalSingkat(limitedInfo.date)}</div>`;
+    return `<div class="limited-status-note offsale-note">Off Sale sejak ${formatTanggalSingkat(limitedInfo.date, limitedInfo.hasTime)}</div>`;
   }
   if(limitedInfo.status === "upcoming"){
-    return `<div class="limited-status-note upcoming-note">Limited mulai ${formatTanggalSingkat(limitedInfo.date)}</div>`;
+    return `<div class="limited-status-note upcoming-note">Limited mulai ${formatTanggalSingkat(limitedInfo.date, limitedInfo.hasTime)}</div>`;
   }
-  if(limitedInfo.date) return `<div class="limited-status-note">Limited sejak ${formatTanggalSingkat(limitedInfo.date)}</div>`;
+  if(limitedInfo.date) return `<div class="limited-status-note">Limited sejak ${formatTanggalSingkat(limitedInfo.date, limitedInfo.hasTime)}</div>`;
   return `<div class="limited-status-note">Limited — stok gak dijual lagi</div>`;
 }
 
@@ -404,6 +461,17 @@ function soldHtml(p){
   return `<div class="sold-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>Terjual <b>${val}</b></div>`;
 }
 
+// Info tanggal upload produk. Aktif kalau di product.js ada:
+//   info: true,
+//   tanggal: "2026-10-10 - 11:00",   // tanggal - jam upload (WIB)
+// -> di kartu muncul "Diupload 10 Okt 2026 • 11:00 WIB". Hapus info/tanggal = gak muncul.
+function uploadInfoHtml(p){
+  if(p.info !== true) return "";
+  const w = parseWaktuWIB(p.tanggal);
+  if(!w) return "";
+  return `<div class="upload-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>RILIS <b>${formatTanggalSingkat(w.date, w.hasTime)}</b></div>`;
+}
+
 function renderProducts(filter){
   const grid = document.getElementById("productGrid");
   grid.innerHTML = "";
@@ -438,6 +506,7 @@ function renderProducts(filter){
         ${engineBadgesFor(p.engines) ? `<div class="engine-badges">${engineBadgesFor(p.engines)}</div>` : ""}
         ${limitedStatusNote(limitedInfo)}
         ${soldHtml(p)}
+        ${uploadInfoHtml(p)}
         <div class="card-foot${isJasa ? " jasa-foot" : ""}">
           ${isJasa ? "" : `
           <div class="price-wrap">
@@ -467,6 +536,7 @@ function renderProducts(filter){
     grid.appendChild(card);
   });
 
+  scheduleLimitedTransition();
   document.getElementById("statProduk").textContent = PRODUCTS.length;
 
   initProductSliders(grid);

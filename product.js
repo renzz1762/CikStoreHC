@@ -49,6 +49,31 @@
      upload/redeploy. Hapus field sold kalau gak mau nampilin.
 
    ============================================================
+   TANGGAL UPLOAD PRODUK (info)
+   ============================================================
+   Tambahin di produk mana aja:
+       info: true,
+       tanggal: "2026-10-10 - 11:00",   // tanggal - jam upload (WIB)
+   -> di kartu muncul "Diupload 10 Okt 2026 • 11:00 WIB".
+   Format: "YYYY-MM-DD - HH:mm" (atau "YYYY-MM-DD HH:mm"; tanggal doang
+   juga boleh). info: false / hapus field-nya = gak muncul.
+   ============================================================
+
+   ============================================================
+   LIMITED / OFF SALE PAKE TANGGAL + JAM
+   ============================================================
+   Semua produk bisa dikasih status Limited / Off Sale terjadwal:
+       limited: true,
+       limitedDate: "2026-10-10 - 11:00",   // mulai Limited: tanggal - jam (WIB)
+       offSaleDate: "2026-12-01 - 20:30",   // (opsional) mulai Off Sale
+   - Format: "YYYY-MM-DD - HH:mm" (boleh juga "YYYY-MM-DD HH:mm", atau
+     tanggal doang "YYYY-MM-DD" = mulai jam 00:00). Jam selalu WIB.
+   - Sebelum waktunya: badge Limited nongol + tulisan "Limited mulai ...",
+     produk MASIH bisa dibeli. Pas waktunya tiba, kartu otomatis berubah
+     jadi LIMITED (tombol mati) tanpa perlu refresh halaman.
+   ============================================================
+
+   ============================================================
    FITUR "COMING SOON" (produk belum rilis)
    ============================================================
    Status coming soon & jam/tanggal rilis produk DIATUR DARI SERVER
@@ -123,6 +148,8 @@ const PRODUCTS = [
     price: "Rp 45.000", // <-- GANTI sesuai harga asli
     category: "kit",
     sold: 0, // <-- UPDATE jumlah terjual di sini
+    info: true, // tampilin tanggal upload
+    tanggal: '2026-10-10 - 11:00', // tanggal - jam upload (WIB)
     img: ["PRODUCT/HangoutKitV3-1.jpg", "PRODUCT/HangoutKitV3-2.jpg"],
     isNew: true,
     engines: ["studio", "lite"],

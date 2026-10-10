@@ -821,3 +821,8 @@ footer{border-top:var(--bw) solid var(--ink);padding:36px 0 96px;background:var(
 }
 .sold-note svg{width:1.25em;height:1.25em;color:var(--red-2);flex-shrink:0;}
 .sold-note b{color:var(--ink);font-weight:800;}
+
+/* Info tanggal upload produk */
+.upload-note{display:flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:10px;font-size:clamp(8px,5.4cqw,10px);font-weight:600;color:var(--muted,#6b6b6b);line-height:1.35;}
+.upload-note svg{width:1.25em;height:1.25em;flex-shrink:0;}
+.upload-note b{color:var(--ink);font-weight:800;}
