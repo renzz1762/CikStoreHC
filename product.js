@@ -147,7 +147,7 @@ const PRODUCTS = [
     desc: "HANGOUT KIT V3 KECHE - MUSIC, DONASI, FREE AVATAR, TAS, ADMIN PANEL DAN SETTING GRAFIK",
     price: "Rp 45.000", // <-- GANTI sesuai harga asli
     category: "kit",
-    sold: 0, // <-- UPDATE jumlah terjual di sini
+    sold: 6, // <-- UPDATE jumlah terjual di sini
     info: true, // tampilin tanggal upload
     tanggal: '2026-10-10 - 11:00', // tanggal - jam upload (WIB)
     img: ["PRODUCT/HangoutKitV3-1.jpg", "PRODUCT/HangoutKitV3-2.jpg"],
