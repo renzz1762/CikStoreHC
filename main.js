@@ -18,7 +18,7 @@ const OWNER_ROLE = "Penjual Script & Bahan Website"; // <-- GANTI kalau mau
 const OWNER_BIO = "Jual script, source code, dan bahan-bahan website siap pakai. Chat aja kalau ada yang mau ditanyain sebelum beli."; // <-- GANTI bio kamu
 const OWNER_PHOTO = "OWNERIMG/owner.png"; // <-- ganti nama file kalau beda
 
-// 4) Daftar saluran (dipakai di tombol "Saluran" atas & menu Info bawah)
+// 4) Daftar saluran (dipakai di tombol "Saluran" atas)
 //    - icon boleh: "channel" atau "tiktok" (sudah disediain ikonnya), atau isi svg sendiri
 const SALURAN_LIST = [
   { name: "Saluran WhatsApp", link: "https://whatsapp.com/channel/0029Vb5aoKwEwEjpsmaQol3A", icon: "channel" }, // <-- GANTI link
@@ -783,7 +783,6 @@ function renderSaluran(container){
     </a>
   `).join("");
 }
-renderSaluran(document.getElementById("infoPopover"));
 renderSaluran(document.getElementById("saluranPopover"));
 
 /* TOMBOL SALURAN WA DI PANEL PROMO */
@@ -864,7 +863,6 @@ if(navWebsiteBtn) navWebsiteBtn.addEventListener("click", openWebsiteModal);
 const websiteNavBtn = document.getElementById("websiteNavBtn");
 if(websiteNavBtn) websiteNavBtn.addEventListener("click", ()=>{
   openWebsiteModal();
-  infoPopoverEl.classList.remove("open");
   document.querySelectorAll(".bn-item").forEach(i=>i.classList.remove("active"));
   websiteNavBtn.classList.add("active");
 });
@@ -915,7 +913,6 @@ if(navChatBtn) navChatBtn.addEventListener("click", openChatModal);
 const chatNavBtn = document.getElementById("chatNavBtn");
 if(chatNavBtn) chatNavBtn.addEventListener("click", ()=>{
   openChatModal();
-  infoPopoverEl.classList.remove("open");
   document.querySelectorAll(".bn-item").forEach(i=>i.classList.remove("active"));
   chatNavBtn.classList.add("active");
 });
@@ -930,26 +927,11 @@ if(modalChatBtn) modalChatBtn.href = waLink("Halo, saya mau tanya-tanya soal CIK
 /* BOTTOM NAV — status aktif */
 document.querySelectorAll(".bn-item[data-target]").forEach(item=>{
   item.addEventListener("click", ()=>{
-    infoPopoverEl.classList.remove("open");
     document.querySelectorAll(".bn-item").forEach(i=>i.classList.remove("active"));
     item.classList.add("active");
   });
 });
 
-/* INFO NAV (bawah) */
-const infoPopoverEl = document.getElementById("infoPopover");
-const infoNavBtn = document.getElementById("infoNavBtn");
-infoNavBtn.addEventListener("click", (e)=>{
-  e.stopPropagation();
-  infoPopoverEl.classList.toggle("open");
-  document.querySelectorAll(".bn-item").forEach(i=>i.classList.remove("active"));
-  infoNavBtn.classList.add("active");
-});
-document.addEventListener("click", (e)=>{
-  if(!infoPopoverEl.contains(e.target) && e.target !== infoNavBtn && !infoNavBtn.contains(e.target)){
-    infoPopoverEl.classList.remove("open");
-  }
-});
 
 /* ============================================================
    SLIDER TESTIMONI

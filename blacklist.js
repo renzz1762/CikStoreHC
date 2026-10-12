@@ -87,8 +87,6 @@ const BLACKLIST_BUKTI = [
     if(!b) return;
     b.addEventListener("click", ()=>{
       open(listOverlay);
-      const pop = document.getElementById("infoPopover");
-      if(pop) pop.classList.remove("open");
       if(id === "blacklistNavBtn"){
         document.querySelectorAll(".bn-item").forEach(i=>i.classList.remove("active"));
         b.classList.add("active");

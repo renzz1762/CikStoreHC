@@ -26,6 +26,7 @@
       <a href="#promoSection">Promo</a>
       <a href="#cara-beli">Cara Beli</a>
       <a href="javascript:void(0)" id="navWebsiteBtn">Website & App</a>
+      <a href="topup.html" id="navTopupBtn">Top Up Robux</a>
       <a href="javascript:void(0)" id="navBlacklistBtn">Blacklist</a>
       <a href="javascript:void(0)" id="navChatBtn">Chat</a>
     </nav>
@@ -388,13 +389,11 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M4.5 20c1.4-3.4 4.2-5.2 7.5-5.2s6.1 1.8 7.5 5.2"/></svg>
     <span>Profile</span>
   </button>
-  <button class="bn-item" id="infoNavBtn">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
-    <span>Info</span>
-  </button>
+  <a href="topup.html" class="bn-item" id="topupNavBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l8 4.6v9.8l-8 4.6-8-4.6V7.1z"/><path d="M12 8l4 2.3v3.4L12 16l-4-2.3v-3.4z"/></svg>
+    <span>Top Up</span>
+  </a>
 </nav>
-
-<div class="popover" id="infoPopover" style="position:fixed;right:16px;bottom:76px;"></div>
 
 <script src="product.js"></script>
 <script src="testimoni.js"></script>
@@ -403,5 +402,15 @@
 <script src="blacklist.js"></script>
 <script src="main.js"></script>
 <script src="follow.js"></script>
+<script>
+/* Buka popup sesuai ?open= (dipakai menu di halaman Top Up) */
+(function(){
+  var o=new URLSearchParams(location.search).get("open"); if(!o) return;
+  var m={website:"websiteNavBtn",blacklist:"blacklistNavBtn",chat:"chatNavBtn",profile:"profileNavBtn"};
+  var b=document.getElementById(m[o]);
+  if(b) setTimeout(function(){ b.click(); },80);
+  history.replaceState(null,"",location.pathname);
+})();
+</script>
 </body>
 </html>

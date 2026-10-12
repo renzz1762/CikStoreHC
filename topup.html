@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Top Up Robux via Username — CIK STORE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="topup.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="index.html">
+      <span class="logo">
+        <span class="logo-fallback">C</span>
+        <img src="LOGOIMG/logo.png" alt="Logo CIK STORE" onerror="this.style.display='none'">
+      </span>
+      CIK STORE
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#katalog">Produk</a>
+      <a href="index.html#promoSection">Promo</a>
+      <a href="index.html#cara-beli">Cara Beli</a>
+      <a href="index.html?open=website">Website & App</a>
+      <a href="topup.html" class="active">Top Up Robux</a>
+      <a href="index.html?open=blacklist">Blacklist</a>
+      <a href="index.html?open=chat">Chat</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="index.html#promoSection" class="btn btn-ghost nav-promo-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 12l-8.6 8.6a2 2 0 01-2.8 0l-6.8-6.8a2 2 0 010-2.8L11 2.4A2 2 0 0112.4 2H19a2 2 0 012 2v6.6a2 2 0 01-.6 1.4z"/><circle cx="15.5" cy="7.5" r="1.5"/></svg>
+        Promo
+      </a>
+      <div class="saluran-wrap">
+        <button class="btn btn-primary" id="navSaluranBtn">Saluran</button>
+        <div class="popover" id="saluranPopover"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap tp-page">
+
+  <section class="tp-hero">
+    <div>
+      <div class="tp-badges">
+        <span class="tp-badge soon" id="tpBadge" style="display:none">Coming soon</span>
+        <span class="tp-badge">Via username</span>
+        <span class="tp-badge">QRIS / Transfer</span>
+      </div>
+      <h1>Top Up Robux via Username</h1>
+      <p>Tinggal masukin username Roblox, pilih paket, bayar. Gak perlu kasih password akun kamu.</p>
+    </div>
+    <div class="tp-coin"><span class="rbx" data-logo></span></div>
+  </section>
+
+  <div class="tp-perks">
+    <div class="tp-perk"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg></i>Tanpa password akun</div>
+    <div class="tp-perk"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></i>Dicek &amp; diproses owner</div>
+    <div class="tp-perk"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg></i>Bayar QRIS / transfer</div>
+  </div>
+
+
+  <section class="tp-banner-green">
+    <div class="tpg-text">
+      <div class="tp-badges"><span class="tp-badge">Mulai Rp 2.000</span><span class="tp-badge b2">30 pilihan paket</span></div>
+      <h2>Robux murah, mulai dari Rp 2.000</h2>
+      <p>Dari paket kecil buat nyoba sampai 525 Robux. Pilih sesuai kantong, bayar pakai QRIS atau transfer.</p>
+      <a class="btn btn-ghost" href="#tpPaketAnchor">Pilih paket →</a>
+    </div>
+    <div class="tpg-art" aria-hidden="true"><span class="rbx" data-logo></span><span class="rbx" data-logo></span><span class="rbx" data-logo></span></div>
+  </section>
+
+  <div class="tp-stats">
+    <div><b id="stMin">Rp 2.000</b><span>Paket termurah</span></div>
+    <div><b id="stCount">30</b><span>Pilihan paket</span></div>
+    <div><b id="stMax">525</b><span>Robux terbesar</span></div>
+  </div>
+
+  <div class="tp-layout" id="tpPaketAnchor">
+    <div>
+      <section class="tp-card">
+        <h2>1. Username Roblox</h2>
+        <p class="sub">Robux dikirim ke akun ini, jadi cek lagi biar gak salah.</p>
+        <label class="tp-label" for="tpUser">Username</label>
+        <div class="tp-input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.4-3.6 4.2-5.4 7.5-5.4s6.1 1.8 7.5 5.4"/></svg>
+          <input class="tp-input" id="tpUser" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="20" placeholder="contoh: CikRorw123">
+        </div>
+        <p class="tp-hint" id="tpHint"></p>
+      </section>
+
+      <section class="tp-card">
+        <h2>2. Pilih paket Robux</h2>
+        <p class="sub">Tap paket yang kamu mau.</p>
+        <div class="tp-pkgs" id="tpPkgs"></div>
+        <button type="button" class="btn btn-ghost tp-more" id="tpMore"></button>
+      </section>
+
+      <section class="tp-card tp-pay" id="tpPay">
+        <h2>3. Bayar</h2>
+        <p class="sub">Total: <b id="payTotal"></b>. Scan QRIS atau transfer manual.</p>
+        <div class="qris" id="qrisBox"></div>
+        <p class="bank" id="bankTxt"></p>
+        <div class="modal-actions">
+          <a class="btn btn-primary" id="payBtn" target="_blank" rel="noopener">Sudah TF, Kirim Bukti</a>
+        </div>
+      </section>
+    </div>
+
+    <aside>
+      <section class="tp-card tp-sum" id="tpSum">
+        <h2>Ringkasan</h2>
+        <div class="tp-sum-row"><span>Username</span><b id="sumUser">Belum diisi</b></div>
+        <div class="tp-sum-row"><span>Paket</span><b id="sumPkg">Belum dipilih</b></div>
+        <div class="tp-total"><span>Total</span><b id="sumTotal">Rp 0</b></div>
+        <div id="tpBuyWrap"><button type="button" class="btn btn-primary tp-buy" id="tpBuy">Isi username dulu</button></div>
+        <div class="tp-soon-note" id="tpSoon"><b>Coming soon.</b> Pembelian belum dibuka. Kamu bisa isi username &amp; lihat harga dulu, nanti tombolnya aktif pas udah rilis.</div>
+        <a class="btn btn-ghost tp-buy" style="margin-top:12px" id="tpAsk" target="_blank" rel="noopener">Tanya owner dulu</a>
+      </section>
+    </aside>
+  </div>
+
+  <section class="tp-card" style="margin-top:22px">
+    <h2>Cara beli</h2>
+    <p class="sub">Cuma 5 langkah.</p>
+    <ol class="tp-steps">
+      <li><div><b>Isi username Roblox</b><span>Pakai username, bukan display name. Cek lagi huruf &amp; angkanya.</span></div></li>
+      <li><div><b>Pilih paket Robux</b><span>Harga otomatis muncul di ringkasan.</span></div></li>
+      <li><div><b>Tekan “Lanjut bayar”</b><span>Muncul QRIS dan nomor rekening. Bayar sesuai total, jangan kurang.</span></div></li>
+      <li><div><b>Kirim bukti transfer</b><span>Tekan “Sudah TF, Kirim Bukti”. WhatsApp kebuka dengan username &amp; paket udah terisi, tinggal lampirin screenshot.</span></div></li>
+      <li><div><b>Tunggu owner proses</b><span>Owner cek pembayaran lalu proses Robux ke akunmu. Kalau ada kendala, owner kabarin lewat chat.</span></div></li>
+    </ol>
+  </section>
+
+  <div class="tp-layout" style="margin-top:22px">
+    <section class="tp-card tp-warn tp-ok" style="margin-top:0">
+      <h2>Yang aman</h2>
+      <ul>
+        <li>Cukup kasih username Roblox.</li>
+        <li>Bayar cuma lewat QRIS / rekening resmi di halaman ini.</li>
+        <li>Simpan bukti transfer sampai Robux masuk.</li>
+      </ul>
+    </section>
+    <section class="tp-card tp-warn" style="margin-top:0">
+      <h2>Jangan pernah</h2>
+      <ul>
+        <li>Kasih password, kode 2-step, atau cookie akun Roblox.</li>
+        <li>Transfer ke rekening yang bukan dari halaman ini.</li>
+        <li>Salah ketik username, Robux gak bisa ditarik balik.</li>
+      </ul>
+    </section>
+  </div>
+
+  <section class="tp-card tp-faq" style="margin-top:22px">
+    <h2>Pertanyaan umum</h2>
+    <p class="sub">Yang paling sering ditanya.</p>
+    <details><summary>Kenapa username, bukan password?</summary><p>Owner cuma butuh tahu akun tujuannya. Password akunmu gak pernah diminta dan jangan dikasih ke siapa pun.</p></details>
+    <details><summary>Berapa lama prosesnya?</summary><p>Setelah bukti transfer dicek, owner langsung proses. Waktunya bisa beda tergantung antrean.</p></details>
+    <details><summary>Salah username, gimana?</summary><p>Segera chat owner sebelum diproses. Kalau Robux sudah terkirim ke akun yang salah, gak bisa dibatalkan.</p></details>
+    <details><summary>Kapan tombol beli aktif?</summary><p>Fitur ini masih coming soon. Pantau Saluran WhatsApp CIK STORE buat info rilisnya.</p></details>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><p class="foot-note">CIK STORE — Top Up Robux via username. Pastikan data yang kamu isi sudah benar sebelum bayar.</p></div>
+</footer>
+
+<nav class="bottom-nav">
+  <a href="index.html" class="bn-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+    <span>Home</span>
+  </a>
+  <a href="index.html#katalog" class="bn-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
+    <span>Produk</span>
+  </a>
+  <a href="index.html?open=website" class="bn-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.8 5.8 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.8-3.8-9S9.5 5.5 12 3z"/></svg>
+    <span>Web/App</span>
+  </a>
+  <a href="index.html?open=blacklist" class="bn-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>
+    <span>Blacklist</span>
+  </a>
+  <a href="index.html?open=chat" class="bn-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a2 2 0 002 2h1l4 4V5L6 9H5a2 2 0 00-2 2z"/><path d="M16 8a5 5 0 010 8"/><path d="M19 5a9 9 0 010 14"/></svg>
+    <span>Chat</span>
+  </a>
+  <a href="index.html?open=profile" class="bn-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M4.5 20c1.4-3.4 4.2-5.2 7.5-5.2s6.1 1.8 7.5 5.2"/></svg>
+    <span>Profile</span>
+  </a>
+  <a href="topup.html" class="bn-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l8 4.6v9.8l-8 4.6-8-4.6V7.1z"/><path d="M12 8l4 2.3v3.4L12 16l-4-2.3v-3.4z"/></svg>
+    <span>Top Up</span>
+  </a>
+</nav>
+
+<script src="topup.js"></script>
+</body>
+</html>
