@@ -1,0 +1,24 @@
+{
+  "id": "/",
+  "name": "CIK STORE",
+  "short_name": "CIK STORE",
+  "description": "CIK STORE - Script, kit, bahan map & jasa Roblox",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fbf9f8",
+  "theme_color": "#ff1f3d",
+  "lang": "id",
+  "categories": ["shopping", "games"],
+  "icons": [
+    { "src": "/icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Katalog", "url": "/#katalog", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Top Up Robux", "url": "/topup.html", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

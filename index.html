@@ -8,6 +8,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#ff1f3d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CIK STORE">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" type="image/png" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body>
 
@@ -328,6 +336,8 @@
     <p class="modal-note" id="profileBio" style="margin-top:14px;"></p>
     <div class="modal-actions">
       <a class="btn btn-primary" id="profileChatBtn" target="_blank" rel="noopener">Chat Owner</a>
+      <button type="button" class="btn btn-ghost" id="cikInstallBtn" style="display:none">Install App</button>
+      <button type="button" class="btn btn-ghost" id="cikNotifBtn">Aktifkan Notifikasi</button>
     </div>
   </div>
 </div>
@@ -412,5 +422,6 @@
   history.replaceState(null,"",location.pathname);
 })();
 </script>
+<script src="pwa.js"></script>
 </body>
 </html>
