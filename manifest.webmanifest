@@ -7,8 +7,8 @@
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#fbf9f8",
-  "theme_color": "#ff1f3d",
+  "background_color": "#05070c",
+  "theme_color": "#05070c",
   "lang": "id",
   "categories": ["shopping", "games"],
   "icons": [

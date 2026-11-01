@@ -1,0 +1,203 @@
+/* =========================================================
+   CIK STORE — tema: GLASS (default) & COMIC
+   Tema Klasik (krem) sudah DIHAPUS. Dua tema ini aktif lewat atribut
+   html[data-theme="glass"] / html[data-theme="comic"] (diset oleh
+   theme-switch.js), nimpa variabel :root yang dipakai di seluruh style.css.
+   ========================================================= */
+
+/* ---------------- GLASS (kaca gelap transparan) ---------------- */
+html[data-theme="glass"]{
+  --bg:#05070c; --bg-2:#0a0d14; --surface:rgba(22,27,34,.55); --surface-2:rgba(255,255,255,.05);
+  --line:rgba(255,255,255,.14); --red:#5b8cff; --red-2:#3f6fe0; --red-bright:#8fb0ff; --red-dim:rgba(91,140,255,.14);
+  --ink:#f3f5f9; --muted:#aab2c5; --muted-2:#7c859c;
+  --ok:#34c759; --ok-bg:rgba(52,199,89,.16); --gold:#ffc107;
+  --bw:1px; --shadow-hard:0 8px 24px rgba(0,0,0,.38); --shadow-hard-sm:0 4px 14px rgba(0,0,0,.32);
+  --panel:var(--surface); --panel-2:var(--surface-2); --solid:#12151c; --text:var(--ink);
+  --red-text:var(--red-bright); --red-light:var(--red-dim); --red-dark:var(--red-2);
+  --teal:#22d3c7; --radius:18px;
+}
+html[data-theme="glass"] body{
+  background-image:
+    radial-gradient(ellipse 900px 520px at 10% -8%, rgba(91,140,255,.14), transparent 60%),
+    radial-gradient(ellipse 650px 460px at 106% 14%, rgba(34,211,199,.10), transparent 60%) !important;
+}
+html[data-theme="glass"] header,
+html[data-theme="glass"] .card,
+html[data-theme="glass"] .modal,
+html[data-theme="glass"] .section-head,
+html[data-theme="glass"] .pay-block{
+  background:var(--surface) !important;
+  -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px);
+  border-color:var(--line) !important;
+}
+html[data-theme="glass"] .btn{border:1px solid var(--line);}
+html[data-theme="glass"] .card:hover{box-shadow:0 10px 30px rgba(0,0,0,.45);}
+
+/* ---------------- COMIC (ala komik: navy gelap + kuning/merah/cyan) ---------------- */
+html[data-theme="comic"]{
+  --bg:#0d1117; --bg-2:#11151c; --surface:#161b22; --surface-2:#1c2128;
+  --line:#000000; --red:#ff3b30; --red-2:#d62f27; --red-bright:#ff6a61; --red-dim:#3a1210;
+  --ink:#ffffff; --muted:#8b949e; --muted-2:#6e7681;
+  --ok:#34c759; --ok-bg:rgba(52,199,89,.16); --gold:#ffc107;
+  --bw:3px; --shadow-hard:4px 4px 0 #000; --shadow-hard-sm:2px 2px 0 #000;
+  --panel:var(--surface); --panel-2:var(--surface-2); --solid:var(--surface); --text:var(--ink);
+  --red-text:var(--red-bright); --red-light:var(--red-dim); --red-dark:var(--red-2);
+  --teal:#00e5ff; --radius:14px;
+  --yellow:#ffc107; --cyan:#00e5ff; --blue:#007aff; --purple:#8b5cf6; --green:#34c759;
+}
+html[data-theme="comic"] body{
+  background-image:
+    radial-gradient(ellipse 900px 520px at 10% -8%, rgba(255,193,7,.08), transparent 60%),
+    radial-gradient(ellipse 650px 460px at 106% 14%, rgba(0,229,255,.06), transparent 60%) !important;
+}
+html[data-theme="comic"] .card,
+html[data-theme="comic"] .modal,
+html[data-theme="comic"] .section-head,
+html[data-theme="comic"] .pay-block,
+html[data-theme="comic"] header{
+  border-color:#000 !important; box-shadow:var(--shadow-hard) !important;
+}
+html[data-theme="comic"] .badge,html[data-theme="comic"] .new-badge{background:var(--yellow) !important;color:#000 !important;border-color:#000 !important;}
+/* Teknik outline hitam ala komik, dipakai di judul & elemen .comic-text */
+html[data-theme="comic"] h1,html[data-theme="comic"] h2,html[data-theme="comic"] h3,
+html[data-theme="comic"] .brand,html[data-theme="comic"] .card-body h3,
+html[data-theme="comic"] .comic-text{
+  font-family:'Montserrat',system-ui,sans-serif !important;font-weight:900 !important;font-style:italic !important;
+  text-shadow:2px 2px 0 #000,-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000 !important;
+}
+html[data-theme="comic"] .comic-box{border:var(--bw) solid #000 !important;box-shadow:var(--shadow-hard) !important;}
+html[data-theme="comic"] .comic-box-small{border:2px solid #000 !important;box-shadow:var(--shadow-hard-sm) !important;}
+
+/* ---------------- Kartu pengaturan (tema / anti-lag) — generik, dipakai di semua tema ---------------- */
+.opt-card{background:var(--surface);border:var(--bw) solid var(--ink);border-radius:14px;padding:14px;margin-bottom:12px;}
+.opt-card h4{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;align-items:center;gap:8px;color:var(--ink);}
+.opt-badge{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--red-dim);color:var(--red-text,var(--red-2));}
+.opt-row{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:10px;border:var(--bw) solid var(--line);background:var(--surface-2);cursor:pointer;text-align:left;margin-bottom:8px;font-family:inherit;color:var(--ink);transition:transform .1s ease;}
+.opt-row:last-child{margin-bottom:0;}
+.opt-row:active{transform:scale(.97);}
+.opt-row.active{border-color:var(--red);background:var(--red-dim);}
+.opt-row strong{display:block;font-size:12.5px;font-weight:800;}
+.opt-row span{display:block;font-size:11px;color:var(--muted);margin-top:1px;}
+.opt-row .opt-check{margin-left:auto;font-size:16px;color:var(--red);visibility:hidden;}
+.opt-row.active .opt-check{visibility:visible;}
+.opt-hint{font-size:11px;color:var(--muted);line-height:1.5;margin-top:4px;}
+
+/* =========================================================
+   FIX TEKS GA KELIATAN (Glass & Comic)
+   Penyebab: style.css (tema krem) banyak pakai
+     background:var(--ink) + color:#fff   -> di tema gelap --ink = PUTIH, jadi putih di atas putih
+   dan overlay putih di banner hero. Di bawah ini semua ditimpa khusus tema gelap.
+   ========================================================= */
+
+/* ---- dasar: logo, avatar, nav aktif ---- */
+html[data-theme="glass"] .brand .logo,
+html[data-theme="glass"] .profile-avatar,
+html[data-theme="glass"] .admin-comment-avatar,
+html[data-theme="glass"] .seller-ava,
+html[data-theme="glass"] .follow-ava{background:#0e1320 !important;border-color:var(--line) !important;color:var(--red-bright) !important;}
+html[data-theme="comic"] .brand .logo,
+html[data-theme="comic"] .profile-avatar,
+html[data-theme="comic"] .admin-comment-avatar,
+html[data-theme="comic"] .seller-ava,
+html[data-theme="comic"] .follow-ava{background:#000 !important;border-color:#000 !important;color:var(--yellow) !important;}
+html[data-theme="glass"] .logo-fallback,html[data-theme="glass"] .seller-ava-fallback{color:var(--red-bright) !important;}
+html[data-theme="comic"] .logo-fallback,html[data-theme="comic"] .seller-ava-fallback{color:var(--yellow) !important;}
+
+html[data-theme="glass"] .nav-links a.active{background:var(--red) !important;color:#fff !important;}
+html[data-theme="comic"] .nav-links a.active{background:var(--yellow) !important;color:#000 !important;}
+
+/* ---- pill / badge yang dulu "putih di atas putih" ---- */
+html[data-theme="glass"] .tag,
+html[data-theme="glass"] .new-badge,
+html[data-theme="glass"] .webapp-type,
+html[data-theme="glass"] .offsale-tag{
+  background:rgba(8,11,18,.86) !important;color:#fff !important;
+  border:1px solid rgba(255,255,255,.34) !important;
+}
+html[data-theme="glass"] .tag-row .tag:last-child{background:var(--red) !important;border-color:transparent !important;}
+html[data-theme="comic"] .tag,
+html[data-theme="comic"] .webapp-type{
+  background:var(--yellow) !important;color:#000 !important;border:2px solid #000 !important;
+  text-shadow:none !important;font-style:normal !important;
+}
+html[data-theme="comic"] .tag-row .tag:last-child{background:var(--red) !important;color:#fff !important;}
+html[data-theme="comic"] .new-badge{background:var(--yellow) !important;color:#000 !important;border:2px solid #000 !important;}
+html[data-theme="comic"] .offsale-tag{background:#000 !important;color:#fff !important;}
+html[data-theme="glass"] .limited-u,
+html[data-theme="comic"] .limited-u{color:#000 !important;}
+html[data-theme="comic"] .limited-banner,
+html[data-theme="glass"] .limited-banner{border-color:#000 !important;}
+html[data-theme="comic"] .popular-badge,
+html[data-theme="glass"] .popular-badge{color:#000 !important;border-color:#000 !important;}
+
+/* ---- badge engine: Studio / Studio Lite / WA / WA Business ---- */
+html[data-theme="glass"] .engine-badge{background:rgba(91,140,255,.16) !important;color:#cfdcff !important;border:1px solid rgba(143,176,255,.55) !important;}
+html[data-theme="comic"] .engine-badge{background:#1c2128 !important;color:var(--cyan) !important;border:2px solid var(--cyan) !important;}
+
+/* ---- tombol OFF SALE / LIMITED / disabled (dulu latar krem + teks abu-abu = pudar) ---- */
+html[data-theme="glass"] .buy-btn.off-sale,html[data-theme="glass"] .buy-btn:disabled,
+html[data-theme="comic"] .buy-btn.off-sale,html[data-theme="comic"] .buy-btn:disabled{
+  background:#2a303b !important;color:#c3cad6 !important;border-color:#4a5262 !important;
+}
+html[data-theme="glass"] .buy-btn.limited-btn,html[data-theme="comic"] .buy-btn.limited-btn{
+  background:#ffe08a !important;color:#4a3300 !important;border-color:#000 !important;
+}
+html[data-theme="glass"] .limited-status-note,html[data-theme="comic"] .limited-status-note{color:#ffcf5a !important;}
+html[data-theme="glass"] .limited-status-note.offsale-note,html[data-theme="comic"] .limited-status-note.offsale-note{color:#ff8c98 !important;}
+html[data-theme="glass"] .limited-status-note.upcoming-note,html[data-theme="comic"] .limited-status-note.upcoming-note{color:#5eead4 !important;}
+
+/* ---- hero banner: overlay putih diganti overlay gelap biar teks putih kebaca ---- */
+html[data-theme="glass"] .hero-banner,
+html[data-theme="comic"] .hero-banner{
+  color:#fff !important;
+  background:
+    linear-gradient(100deg, rgba(5,7,12,.90) 0%, rgba(5,7,12,.70) 50%, rgba(5,7,12,.22) 100%),
+    var(--banner-img) center/cover no-repeat, var(--surface) !important;
+}
+html[data-theme="glass"] .hero-banner .headline,
+html[data-theme="comic"] .hero-banner .headline{color:#fff !important;}
+html[data-theme="glass"] .hero-banner .lede,
+html[data-theme="comic"] .hero-banner .lede{color:#e3e8f3 !important;}
+html[data-theme="glass"] .hero-banner{border-color:var(--line) !important;box-shadow:0 8px 28px rgba(0,0,0,.45) !important;}
+html[data-theme="comic"] .hero-banner{border-color:#000 !important;box-shadow:6px 6px 0 #000 !important;}
+html[data-theme="glass"] .hero-banner::before,html[data-theme="comic"] .hero-banner::before{-webkit-text-stroke:1px rgba(255,255,255,.14);}
+
+/* ---- header: di tema comic dulu tetap abu terang (brand putih di atas abu) ---- */
+html[data-theme="glass"] header{background:rgba(8,11,18,.72) !important;border-bottom:1px solid var(--line) !important;}
+html[data-theme="comic"] header{background:#11151c !important;border-bottom:var(--bw) solid #000 !important;}
+
+/* ---- panel CTA biru: teks deskripsi 90% putih di atas biru muda kurang kontras ---- */
+html[data-theme="glass"] .cta-band{background:linear-gradient(135deg,#2b4fb3,#3f6fe0) !important;}
+html[data-theme="glass"] .cta-band h2,html[data-theme="glass"] .cta-band p{color:#fff !important;}
+html[data-theme="glass"] .cta-band p{opacity:1 !important;color:#eaf0ff !important;}
+
+/* ---- kolom kategori/tab dll yang pakai #fff literal ---- */
+html[data-theme="glass"] .qris-box,html[data-theme="comic"] .qris-box{color:#17100f;}
+html[data-theme="glass"] .service-price,html[data-theme="comic"] .service-price{color:var(--gold) !important;font-weight:800;}
+
+/* ---- popup Glass: dibuat lebih pekat biar isi halaman di belakang gak "tembus" ngeganggu teks ---- */
+html[data-theme="glass"] .modal{background:rgba(12,16,24,.97) !important;}
+html[data-theme="glass"] .modal-overlay{background:rgba(2,4,8,.72) !important;}
+html[data-theme="glass"] .pay-block{background:rgba(255,255,255,.04) !important;}
+/* nama website/app boleh turun 2 baris (biar "GA SUPPORT" vs "SUPPORT" ketahuan bedanya) */
+html[data-theme="glass"] .webapp-name,html[data-theme="comic"] .webapp-name{white-space:normal !important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.25;}
+
+/* =========================================================
+   HALAMAN TOP UP (topup.html) — fix chip putih kosong, catatan coming soon, label HEMAT
+   ========================================================= */
+html[data-theme="comic"] .tp-badge{background:#fff !important;color:#000 !important;border:2px solid #000 !important;text-shadow:none !important;}
+html[data-theme="comic"] .tp-badge.soon,
+html[data-theme="comic"] .tp-banner-green .tp-badge.b2{background:var(--yellow) !important;color:#000 !important;}
+html[data-theme="glass"] .tp-badge{background:rgba(8,11,18,.86) !important;color:#fff !important;border:1px solid rgba(255,255,255,.34) !important;}
+html[data-theme="glass"] .tp-badge.soon,
+html[data-theme="glass"] .tp-banner-green .tp-badge.b2{background:var(--gold) !important;color:#000 !important;border-color:rgba(0,0,0,.4) !important;}
+html[data-theme="glass"] .tp-soon-note,
+html[data-theme="comic"] .tp-soon-note{background:rgba(255,193,7,.13) !important;color:var(--ink) !important;border-color:rgba(255,193,7,.6) !important;}
+html[data-theme="glass"] .tp-soon-note b,html[data-theme="comic"] .tp-soon-note b{color:#ffd166;}
+html[data-theme="glass"] .tp-input.bad,html[data-theme="comic"] .tp-input.bad{background:rgba(255,59,48,.16) !important;border-color:#ff6a61 !important;}
+html[data-theme="glass"] .tp-pkg.hot::after,html[data-theme="comic"] .tp-pkg.hot::after{color:#000 !important;border-color:#000 !important;}
+html[data-theme="glass"] .tp-hero,html[data-theme="glass"] .tp-banner-green{border-color:var(--line) !important;box-shadow:0 8px 28px rgba(0,0,0,.45) !important;}
+html[data-theme="glass"] .tp-perk,html[data-theme="glass"] .tp-card,html[data-theme="glass"] .tp-stats div,html[data-theme="glass"] .tp-pkg,html[data-theme="glass"] .tp-faq details{border-color:var(--line) !important;box-shadow:none !important;}
+html[data-theme="glass"] .tp-pkg.sel{border-color:var(--red-bright) !important;}
+html[data-theme="glass"] .tp-hero p,html[data-theme="comic"] .tp-hero p,
+html[data-theme="glass"] .tp-banner-green p,html[data-theme="comic"] .tp-banner-green p{color:#fff !important;opacity:1;}

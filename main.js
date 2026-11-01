@@ -100,7 +100,7 @@ function slugifyKey(name){
 // kategori/produk-nya sendiri (CODE_PROMO_<KEY>), gak ikut kena walau
 // orang masukin kode promo umum. Tambahin nama kategori lain di sini
 // kalau perlu (harus sama persis kayak field "category" di product.js).
-const EXCLUDE_FROM_ALL_PROMO = ["bahan_map"];
+const EXCLUDE_FROM_ALL_PROMO = ["bahan_map", "nomkos"];
 
 // Cek promo mana yang berlaku buat 1 produk tertentu, dari SEMUA kode promo
 // yang lagi aktif (activePromos bisa isi banyak kode sekaligus). Kalau ada
@@ -164,7 +164,7 @@ function handleImgError(imgEl){
   imgEl.outerHTML = fallbackIcon;
 }
 
-const CATEGORY_LABELS = { script: "SCRIPT", bahan: "Bahan", bahan_map: "BAHAN MAP", kit: "KIT", CC: "COLORING HD", jasa: "JASA" };
+const CATEGORY_LABELS = { script: "SCRIPT", bahan: "Bahan", bahan_map: "BAHAN MAP", kit: "KIT", CC: "COLORING HD", jasa: "JASA", nomkos: "NOMKOS" };
 
 // Banner "LIMITED" + "U" ala item Unique di Roblox — dipake di kartu produk
 // kalau field "limited" di product.js diisi true. Contoh produk di product.js:
@@ -483,7 +483,7 @@ function renderProducts(filter){
 
     const comingSoon = getComingSoonInfo(p);
     const promoPrice = getPromoPriceFor(p);
-    const isJasa = p.category === "jasa";
+    const isJasa = p.category === "jasa" || p.category === "nomkos"; // kartu tanpa harga tunggal, tombol "Lihat" -> popup daftar
     // Limited & Off Sale itu 2 status BEDA (liat getLimitedStatus), tapi dua-duanya
     // sama-sama bikin produk gak bisa dibeli. Status "upcoming" (belum masuk limitedDate)
     // beda sendiri: badge & catatan tanggalnya tetep MUNCUL, tapi MASIH BISA DIBELI.
@@ -538,6 +538,8 @@ function renderProducts(filter){
 
   scheduleLimitedTransition();
   document.getElementById("statProduk").textContent = PRODUCTS.length;
+  const statKat = document.getElementById("statKategori");
+  if(statKat) statKat.textContent = document.querySelectorAll("#tabs .tab:not([data-filter=\"semua\"])").length;
 
   initProductSliders(grid);
   grid.querySelectorAll(".seller-owner").forEach(el=>{
@@ -550,7 +552,7 @@ function renderProducts(filter){
     btn.addEventListener("click", ()=>{
       if(btn.disabled) return;
       const product = PRODUCTS[btn.dataset.idx];
-      if(product.category === "jasa") openServiceModal(product);
+      if(product.category === "jasa" || product.category === "nomkos") openServiceModal(product);
       else openBuyModal(product);
     });
   });
@@ -606,15 +608,26 @@ buyOverlay.addEventListener("click", (e)=>{ if(e.target === buyOverlay) buyOverl
    gak pake QRIS/transfer soalnya harga & prosesnya nego lewat chat. */
 const jasaOverlay = document.getElementById("modalJasaOverlay");
 function openServiceModal(product){
+  const isNomkos = product.category === "nomkos";
   document.getElementById("modalJasaName").textContent = product.name;
   document.getElementById("modalJasaDesc").textContent = product.desc || "";
 
   const serviceList = document.getElementById("serviceList");
   const services = product.services || [];
-  serviceList.innerHTML = services.map((s) => {
-    // Harga sengaja ditampilin sebagai "???" (bukan harga aslinya) —
-    // biar yang mau tau harga pastinya harus tekan "Order" dulu buat
-    // DM/chat langsung ke owner.
+  serviceList.innerHTML = services.map((s, i) => {
+    // JASA  : harga ditampilin "???" (nego lewat chat) + tombol Order ke WhatsApp.
+    // NOMKOS: harga ditampilin ASLI + tombol Beli (QRIS / transfer).
+    if(isNomkos){
+      return `
+      <li class="service-item">
+        <div class="service-info">
+          <span class="service-name">${s.name}</span>
+          ${s.desc ? `<span class="service-desc">${s.desc}</span>` : ""}
+          <span class="service-price">${s.price || ""}</span>
+        </div>
+        <button type="button" class="btn btn-primary service-order-btn service-buy-btn" data-svc="${i}">Beli</button>
+      </li>`;
+    }
     const orderMsg = `Halo, saya mau tanya harga & order layanan "${s.name}" dari "${product.name}" di CIK STORE.`;
     return `
       <li class="service-item">
@@ -626,6 +639,39 @@ function openServiceModal(product){
         <a class="btn btn-primary service-order-btn" target="_blank" rel="noopener" href="${waLink(orderMsg)}">Order</a>
       </li>`;
   }).join("");
+
+  // judul blok daftar: beda buat jasa vs nomkos
+  const svcHead = jasaOverlay.querySelector(".pay-block h4");
+  if(svcHead){
+    const last = svcHead.lastChild;
+    if(last && last.nodeType === 3) last.textContent = isNomkos ? " Pilih nomor" : " Pilihan yang bisa di-order";
+  }
+  // catatan di bawah daftar: beda buat jasa vs nomkos
+  const note = jasaOverlay.querySelector(".modal-note");
+  if(note){
+    note.textContent = isNomkos
+      ? "Pilih nomor yang kamu mau lalu tekan \"Beli\" — bayar via QRIS / transfer, kirim bukti ke owner, nomor langsung dikirim setelah dicek."
+      : "Harga masih \"???\" karena nego langsung lewat chat. Tekan \"Order\" di layanan yang kamu mau, nanti diarahin ke WhatsApp buat tanya harga & lanjut prosesnya.";
+  }
+
+  if(isNomkos){
+    serviceList.querySelectorAll(".service-buy-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const s = services[Number(btn.dataset.svc)];
+        if(!s) return;
+        // produk "virtual" per-nomor biar alur QRIS/transfer yang sama bisa dipakai
+        const item = {
+          name: s.name,
+          price: s.price,
+          category: "nomkos",
+          usn: "NOMKOS_" + slugifyKey(s.name),
+          features: [s.desc || s.name, "Dikirim setelah bukti transfer dicek"]
+        };
+        jasaOverlay.classList.remove("open");
+        openBuyModal(item);
+      });
+    });
+  }
 
   jasaOverlay.classList.add("open");
 }
@@ -1094,11 +1140,16 @@ const POPULAR_BADGE_MEDIA = `<span class="popular-badge"><svg viewBox="0 0 24 24
 
 // Bikin badge engine per produk berdasarkan field "engines" (array: "studio" / "lite").
 // Kalau field-nya gak diisi di product.js, gak ada badge yang muncul (gak maksa semua produk).
+const WA_BADGE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 01-12.4 7.4L3 20.5l1.7-5.4A8.4 8.4 0 1121 11.5z"/><path d="M9 9.2c.3 2.6 2.4 4.7 5 5l1.1-1.3-1.9-1-.8.7a3.5 3.5 0 01-1.7-1.7l.7-.8-1-1.9z"/></svg>`;
 function engineBadgesFor(engines){
   if(!Array.isArray(engines) || !engines.length) return "";
+  // normalisasi nama (huruf kecil, tanpa spasi/simbol) biar "WA Business", "wabussines", dll tetap kebaca
+  const keys = engines.map(e => String(e).toLowerCase().replace(/[^a-z]/g, ""));
   const parts = [];
-  if(engines.includes("studio")) parts.push(`<span class="engine-badge">${ENGINE_BADGE_SVG} Studio</span>`);
-  if(engines.includes("lite")) parts.push(`<span class="engine-badge">${ENGINE_BADGE_SVG} Studio Lite</span>`);
+  if(keys.includes("studio")) parts.push(`<span class="engine-badge">${ENGINE_BADGE_SVG} Studio</span>`);
+  if(keys.includes("lite")) parts.push(`<span class="engine-badge">${ENGINE_BADGE_SVG} Studio Lite</span>`);
+  if(keys.some(k => k === "wa" || k === "wabiasa")) parts.push(`<span class="engine-badge">${WA_BADGE_SVG} WA</span>`);
+  if(keys.some(k => k.startsWith("wab") && k !== "wabiasa")) parts.push(`<span class="engine-badge">${WA_BADGE_SVG} WA Business</span>`);
   return parts.join("");
 }
 

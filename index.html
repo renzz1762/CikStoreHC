@@ -3,13 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CIK STORE — Script & Bahan Website</title>
+<title>CIK STORE — Script Roblox Studio, Bahan Map &amp; Nomkos</title>
+<meta name="description" content="CIK STORE: jual Script Roblox Studio, bahan Roblox Studio / bahan map, nomkos WA, jasa custom, dan top up Robux. Fast respon, bayar QRIS.">
+<link rel="canonical" href="https://cikstore.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CIK STORE">
+<meta property="og:locale" content="id_ID">
+<meta property="og:url" content="https://cikstore.vercel.app/">
+<meta property="og:title" content="CIK STORE — Script Roblox Studio, Bahan Map &amp; Nomkos">
+<meta property="og:description" content="Jual Script Roblox Studio, bahan Roblox Studio / bahan map, nomkos WA, jasa custom, dan top up Robux. Fast respon, bayar QRIS.">
+<meta property="og:image" content="https://cikstore.vercel.app/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CIK STORE — Script Roblox Studio, Bahan Map &amp; Nomkos">
+<meta name="twitter:description" content="Jual Script Roblox Studio, bahan Roblox Studio / bahan map, nomkos WA, jasa custom, dan top up Robux.">
+<meta name="twitter:image" content="https://cikstore.vercel.app/og-image.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Montserrat:ital,wght@0,700;0,800;0,900;1,800;1,900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme-extra.css">
+<script>
+/* Set tema SEBELUM render biar nggak kedip. Tema: glass (default) / comic. Tema Klasik sudah dihapus. */
+(function(){var t='glass';try{var v=localStorage.getItem('cik_theme');if(v==='comic')t='comic';}catch(e){}document.documentElement.setAttribute('data-theme',t);})();
+</script>
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#ff1f3d">
+<meta name="theme-color" content="#05070c">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="CIK STORE">
@@ -34,6 +54,7 @@
       <a href="#promoSection">Promo</a>
       <a href="#cara-beli">Cara Beli</a>
       <a href="javascript:void(0)" id="navWebsiteBtn">Website & App</a>
+      <a href="javascript:void(0)" id="navAppBtn">App &amp; Tema</a>
       <a href="topup.html" id="navTopupBtn">Top Up Robux</a>
       <a href="javascript:void(0)" id="navBlacklistBtn">Blacklist</a>
       <a href="javascript:void(0)" id="navChatBtn">Chat</a>
@@ -81,7 +102,7 @@
       </div>
       <div class="stat-row">
         <div class="stat"><b id="statProduk">0</b><span>Produk</span></div>
-        <div class="stat"><b>4</b><span>Kategori</span></div>
+        <div class="stat"><b id="statKategori">4</b><span>Kategori</span></div>
         <div class="stat"><b>Fast</b><span>Respon</span></div>
       </div>
     </div>
@@ -171,6 +192,7 @@
       <button class="tab" data-filter="script">Script & Source Code</button>
       <button class="tab" data-filter="bahan">Bahan Website</button>
       <button class="tab" data-filter="jasa">Jasa</button>
+      <button class="tab" data-filter="nomkos">Nomkos</button>
       <button class="tab" data-filter="CC">COLORING HD</button>
       <button class="tab" data-filter="bahan_map">BAHAN MAP</button>
       <button class="tab" data-filter="kit">KIT</button>
@@ -302,6 +324,23 @@
   </div>
 </div>
 
+<!-- MODAL APLIKASI & TEMA (download PWA/APK, ganti tema, anti lag) -->
+<div class="modal-overlay" id="modalAppOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalAppClose">✕</button>
+    <h3>Aplikasi &amp; Tema</h3>
+    <p class="modal-jasa-desc">Install CIK STORE jadi aplikasi, ganti tampilan, dan nyalain mode anti lag buat HP yang kurang kuat.</p>
+
+    <div class="pay-block">
+      <h4><svg class="head-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg> Install Aplikasi</h4>
+      <button type="button" class="btn btn-ghost" id="cikInstallBtn2" style="width:100%;margin-bottom:10px;" onclick="document.getElementById('cikInstallBtn') && document.getElementById('cikInstallBtn').click()">Install App (PWA)</button>
+      <button type="button" class="btn btn-ghost" id="appApkBtn" style="width:100%;">Download APK</button>
+    </div>
+
+    <div id="appSettingsBody"></div>
+  </div>
+</div>
+
 <!-- MODAL CHAT (komentar pin dari admin/owner) -->
 <div class="modal-overlay" id="modalChatOverlay">
   <div class="modal">
@@ -391,9 +430,9 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>
     <span>Blacklist</span>
   </button>
-  <button class="bn-item" id="chatNavBtn">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a2 2 0 002 2h1l4 4V5L6 9H5a2 2 0 00-2 2z"/><path d="M16 8a5 5 0 010 8"/><path d="M19 5a9 9 0 010 14"/></svg>
-    <span>Chat</span>
+  <button class="bn-item" id="appNavBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.9 2.9l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.6V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.9-2.9l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.6-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.6-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.9-2.9l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.6V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.6 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.9 2.9l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.6 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.6 1z"/></svg>
+    <span>Setting</span>
   </button>
   <button class="bn-item" id="profileNavBtn">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M4.5 20c1.4-3.4 4.2-5.2 7.5-5.2s6.1 1.8 7.5 5.2"/></svg>
@@ -422,6 +461,9 @@
   history.replaceState(null,"",location.pathname);
 })();
 </script>
+<script src="theme-switch.js"></script>
+<script src="antilag.js"></script>
+<script src="app-settings.js"></script>
 <script src="pwa.js"></script>
 </body>
 </html>

@@ -22,6 +22,11 @@
      atau dua-duanya sekaligus), nandain produk itu bisa dipasang di engine
      mana aja. Kosongin / hapus field-nya kalau produk gak relevan (misal
      bukan map/kit Roblox), gak bakal ada label yang muncul.
+   - engines juga bisa dipakai buat produk NOMKOS: ["wa", "wabusiness"]
+     -> label kecil "WA" / "WA Business" (sama gayanya kayak Studio / Studio Lite).
+   - category: "nomkos" = kategori NOMKOS (nomor WA). Sama kayak "jasa" tombolnya
+     "Lihat" -> popup daftar nomor (field "services"), TAPI harga ditampilin
+     asli (bukan ???) dan tiap nomor punya tombol "Beli" (QRIS / transfer).
    - popular: true/false (opsional) — kalau true, muncul label tambahan
      "★ POPULER" di samping label Studio/Studio Lite (bisa dipasang bareng,
      jadi satu produk bisa punya 3 label sekaligus: Studio, Studio Lite,
@@ -142,6 +147,44 @@
 
 const PRODUCTS = [
   {
+    // Contoh produk kategori "jasa" (layanan) — beda dari produk biasa:
+    // - GAK pake field "price" & GAK ada tombol "Beli"/QRIS, soalnya
+    //   harga & prosesnya nego/order langsung ke owner.
+    // - Tombol di kartu produknya otomatis jadi "Lihat", pas ditekan
+    //   muncul popup daftar layanan dari field "services" di bawah,
+    //   tiap layanan punya tombol "Order" sendiri (langsung ke WhatsApp).
+    // - Tinggal tambah/hapus/ubah item di array "services" buat
+    //   ngatur daftar yang bisa di-order.
+    name: "NOMKOS WA #1",
+    desc: "BUTUH NOMKOS / NOMOR WA BUAT NGE JB BIAR GA DI BUG? BUY KE CikRorw SOLUSINYA ",
+    category: "nomkos",
+    sold: 2, // <-- UPDATE jumlah terjual di sini
+    img: "NOMKOS/nomkos-1.png",
+    isNew: true,
+    engines: ["wa", "wabusiness"],
+    services: [
+      { name: "NOMKOS INDO +62", desc: "NOMKOS / NOMOR WA INDO +62", price: "Rp 5.000" },
+      { name: "NOMKOS VIETNAM +84", desc: "NOMKOS / NOMOR WA VIETNAM +84", price: "Rp 8.000" },
+      { name: "NOMKOS RUSIA +7", desc: "NOMKOS / NOMOR WA RUSIA +7", price: "Rp 10.000" },
+      { name: "NOMKOS KENYA +254", desc: "NOMKOS / NOMOR WA KENYA +254", price: "Rp 8.000" },
+    ]
+  },
+  {
+      name: "NOMKOS WA #2",
+    desc: "BUTUH NOMKOS / NOMOR WA BUAT NGE JB BIAR GA DI BUG? BUY KE CikRorw SOLUSINYA ",
+    category: "nomkos",
+    sold: 0, // <-- UPDATE jumlah terjual di sini
+    img: "NOMKOS/nomkos-2.png",
+    isNew: true,
+    engines: ["wa", "wabusiness"],
+    services: [
+      { name: "NOMKOS INGGRIS +44", desc: "NOMKOS / NOMOR WA INGGRIS +44", price: "Rp 8.000" },
+      { name: "NOMKOS MESIR +20", desc: "NOMKOS / NOMOR WA MESIR +20", price: "Rp 8.000" },
+      { name: "NOMKOS NIGERIA +234", desc: "NOMKOS / NOMOR WA NIGERIA +234", price: "Rp 10.000" },
+      { name: "NOMKOS HONGKONG +852", desc: "NOMKOS / NOMOR WA HONGKONG +852", price: "Rp 8.000" },
+    ]
+  },
+  {
     name: "Hangout Kit V3 - KECHE",
     usn: "HANGOUT_KIT_V3",
     desc: "HANGOUT KIT V3 KECHE - MUSIC, DONASI, FREE AVATAR, TAS, ADMIN PANEL DAN SETTING GRAFIK",
@@ -167,7 +210,7 @@ const PRODUCTS = [
     desc: "CUMA BUTUH 1 SCRIPT AJAH BIAR JADI BUKIT BUKIT - RINGAN DAN SIMPLE",
     price: "Rp 15.000",
     category: "script",
-    sold: 87, // <-- UPDATE jumlah terjual di sini
+    sold: 88, // <-- UPDATE jumlah terjual di sini
     img: "PRODUCT/RelapseBukit.png",
     isNew: true,
     engines: ["studio", "lite"],
