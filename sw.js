@@ -1,5 +1,5 @@
 // CIK STORE service worker: PWA offline shell + Web Push
-const CACHE = 'cik-store-v3';
+const CACHE = 'cik-store';
 const SHELL = ['/', '/index.html', '/topup.html', '/style.css', '/topup.css', '/main.js', '/product.js', '/topup.js', '/pwa.js',
   '/manifest.webmanifest', '/icon-192.png', '/icon-512.png', '/badge-96.png', '/LOGOIMG/logo.png', '/theme-extra.css', '/theme-switch.js'];
 
