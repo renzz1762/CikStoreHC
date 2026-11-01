@@ -1,5 +1,5 @@
 // CIK STORE service worker: PWA offline shell + Web Push
-const CACHE = 'cik-store-v2';
+const CACHE = 'cik-store-v3';
 const SHELL = ['/', '/index.html', '/topup.html', '/style.css', '/topup.css', '/main.js', '/product.js', '/topup.js', '/pwa.js',
   '/manifest.webmanifest', '/icon-192.png', '/icon-512.png', '/badge-96.png', '/LOGOIMG/logo.png', '/theme-extra.css', '/theme-switch.js'];
 
@@ -12,9 +12,17 @@ self.addEventListener('install', (e) => {
 });
 
 self.addEventListener('activate', (e) => {
-  e.waitUntil(
-    caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())
-  );
+  e.waitUntil((async () => {
+    const ks = await caches.keys();
+    const old = ks.filter((k) => k !== CACHE);
+    await Promise.all(old.map((k) => caches.delete(k)));
+    await self.clients.claim();
+    // kalau ini update dari versi lama (cache lama ada), reload tab yang lagi kebuka biar langsung kebaca versi baru
+    if (old.length) {
+      const list = await self.clients.matchAll({ type: 'window' });
+      list.forEach((c) => { try { c.navigate(c.url); } catch (err) {} });
+    }
+  })());
 });
 
 self.addEventListener('fetch', (e) => {
@@ -46,12 +54,12 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // Gambar dll: cache first
+  // Gambar dll: network first (cek ke server dulu, kalau gambar diganti langsung ikut ganti), offline baru pakai cache
   e.respondWith(
-    caches.match(req, { ignoreSearch: true }).then((hit) => hit || fetch(req).then((res) => {
+    fetch(req, { cache: 'no-cache' }).then((res) => {
       if (res && res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {}); }
       return res;
-    }))
+    }).catch(() => caches.match(req, { ignoreSearch: true }))
   );
 });
 
