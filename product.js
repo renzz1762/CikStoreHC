@@ -161,6 +161,8 @@ const PRODUCTS = [
     sold: 2, // <-- UPDATE jumlah terjual di sini
     img: "NOMKOS/nomkos-1.png",
     isNew: true,
+    info: true, // tampilin tanggal upload
+    tanggal: '2026-11-1 - 21:05',
     engines: ["wa", "wabusiness"],
     services: [
       { name: "NOMKOS INDO +62", desc: "NOMKOS / NOMOR WA INDO +62", price: "Rp 5.000" },
@@ -176,6 +178,8 @@ const PRODUCTS = [
     sold: 0, // <-- UPDATE jumlah terjual di sini
     img: "NOMKOS/nomkos-2.png",
     isNew: true,
+    info: true, // tampilin tanggal upload
+    tanggal: '2026-11-1 - 21:05',
     engines: ["wa", "wabusiness"],
     services: [
       { name: "NOMKOS INGGRIS +44", desc: "NOMKOS / NOMOR WA INGGRIS +44", price: "Rp 8.000" },

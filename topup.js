@@ -9,7 +9,7 @@
 const TOPUP_COMING_SOON = true;
 
 // Samain dengan yang ada di main.js
-const OWNER_WA   = "84565781833";
+const OWNER_WA   = "6283148944126"; // cadangan aja. Nomor yang dipakai sebenarnya diatur di wa-picker.js (WA_NUMBERS)
 const QRIS_IMAGE = "QRISIMG/qris.png";
 const BANK_INFO  = "-------";
 

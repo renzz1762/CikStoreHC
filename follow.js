@@ -15,7 +15,7 @@ const FOLLOW_ONCE_PER_SESSION = false; // true = cuma muncul sekali per sesi bro
   const tt = SALURAN_LIST.find(s => s.icon === "tiktok");
   const items = [
     wa && { icon: "channel", title: "Saluran WhatsApp", desc: "Info produk baru, promo & kode promo", btn: "Gabung", link: wa.link },
-    tt && { icon: "tiktok", title: "TikTok @cikhub_01", desc: "Konten, update & giveaway", btn: "Follow", link: tt.link }
+    tt && { icon: "tiktok", title: "TikTok @_cikrorw01", desc: "script free , update , informasi & giveaway", btn: "Follow", link: tt.link }
   ].filter(Boolean);
 
   list.innerHTML = items.map(it => `

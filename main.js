@@ -4,7 +4,7 @@
    ============================================================ */
 
 // 1) Nomor WhatsApp owner (format: kode negara tanpa +, tanpa spasi/strip)
-const OWNER_WA = "84565781833"; // <-- GANTI dengan nomor WhatsApp owner CIK STORE
+const OWNER_WA = "6283148944126"; // cadangan aja. Nomor yang dipakai sebenarnya diatur di wa-picker.js (WA_NUMBERS)
 
 // 2) Info pembayaran
 //    - Taruh gambar QRIS kamu di folder QRISIMG/ lalu tulis nama filenya di bawah
@@ -22,7 +22,7 @@ const OWNER_PHOTO = "OWNERIMG/owner.png"; // <-- ganti nama file kalau beda
 //    - icon boleh: "channel" atau "tiktok" (sudah disediain ikonnya), atau isi svg sendiri
 const SALURAN_LIST = [
   { name: "Saluran WhatsApp", link: "https://whatsapp.com/channel/0029Vb5aoKwEwEjpsmaQol3A", icon: "channel" }, // <-- GANTI link
-  { name: "TikTok", link: "https://www.tiktok.com/@cikhub_01", icon: "tiktok" } // <-- GANTI link
+  { name: "TikTok", link: "https://www.tiktok.com/@_cikrorw01", icon: "tiktok" } // <-- GANTI link
 ];
 
 // 5) Daftar Website & Aplikasi (buat menu "Website & App" di navigasi atas & bawah)
@@ -612,8 +612,9 @@ function openServiceModal(product){
   const services = product.services || [];
   serviceList.innerHTML = services.map((s, i) => {
     // JASA  : harga ditampilin "???" (nego lewat chat) + tombol Order ke WhatsApp.
-    // NOMKOS: harga ditampilin ASLI + tombol Beli (QRIS / transfer).
+    // NOMKOS: harga ditampilin ASLI + tombol Order ke WhatsApp (sama kayak jasa).
     if(isNomkos){
+      const nomMsg = `Halo, saya mau order "${s.name}" (${s.price || "-"}) dari "${product.name}" di CIK STORE.`;
       return `
       <li class="service-item">
         <div class="service-info">
@@ -621,7 +622,7 @@ function openServiceModal(product){
           ${s.desc ? `<span class="service-desc">${s.desc}</span>` : ""}
           <span class="service-price">${s.price || ""}</span>
         </div>
-        <button type="button" class="btn btn-primary service-order-btn service-buy-btn" data-svc="${i}">Beli</button>
+        <a class="btn btn-primary service-order-btn" target="_blank" rel="noopener" href="${waLink(nomMsg)}">Order</a>
       </li>`;
     }
     const orderMsg = `Halo, saya mau tanya harga & order layanan "${s.name}" dari "${product.name}" di CIK STORE.`;
@@ -646,27 +647,8 @@ function openServiceModal(product){
   const note = jasaOverlay.querySelector(".modal-note");
   if(note){
     note.textContent = isNomkos
-      ? "Pilih nomor yang kamu mau lalu tekan \"Beli\" — bayar via QRIS / transfer, kirim bukti ke owner, nomor langsung dikirim setelah dicek."
+      ? "Pilih nomor yang kamu mau lalu tekan \"Order\" — nanti diarahin ke WhatsApp buat lanjut proses & pembayaran ke owner."
       : "Harga masih \"???\" karena nego langsung lewat chat. Tekan \"Order\" di layanan yang kamu mau, nanti diarahin ke WhatsApp buat tanya harga & lanjut prosesnya.";
-  }
-
-  if(isNomkos){
-    serviceList.querySelectorAll(".service-buy-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const s = services[Number(btn.dataset.svc)];
-        if(!s) return;
-        // produk "virtual" per-nomor biar alur QRIS/transfer yang sama bisa dipakai
-        const item = {
-          name: s.name,
-          price: s.price,
-          category: "nomkos",
-          usn: "NOMKOS_" + slugifyKey(s.name),
-          features: [s.desc || s.name, "Dikirim setelah bukti transfer dicek"]
-        };
-        jasaOverlay.classList.remove("open");
-        openBuyModal(item);
-      });
-    });
   }
 
   jasaOverlay.classList.add("open");
