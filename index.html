@@ -57,7 +57,6 @@
       <a href="javascript:void(0)" id="navAppBtn">App &amp; Tema</a>
       <a href="topup.html" id="navTopupBtn">Top Up Robux</a>
       <a href="javascript:void(0)" id="navBlacklistBtn">Blacklist</a>
-      <a href="javascript:void(0)" id="navChatBtn">Chat</a>
     </nav>
     <div class="nav-actions">
       <a href="#promoSection" class="btn btn-ghost nav-promo-btn">
@@ -341,22 +340,6 @@
   </div>
 </div>
 
-<!-- MODAL CHAT (komentar pin dari admin/owner) -->
-<div class="modal-overlay" id="modalChatOverlay">
-  <div class="modal">
-    <button class="modal-close" id="modalChatClose">✕</button>
-    <h3><svg class="head-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a2 2 0 002 2h1l4 4V5L6 9H5a2 2 0 00-2 2z"/><path d="M16 8a5 5 0 010 8"/><path d="M19 5a9 9 0 010 14"/></svg> Chat</h3>
-    <p class="modal-jasa-desc">Komentar terbaru dari admin CIK STORE.</p>
-
-    <div class="admin-chat-list" id="adminChatList"></div>
-
-    <p class="modal-note">Ada yang mau ditanyain? Langsung chat aja ke owner.</p>
-    <div class="modal-actions">
-      <a class="btn btn-primary" id="modalChatBtn" target="_blank" rel="noopener">Chat Owner</a>
-    </div>
-  </div>
-</div>
-
 <!-- MODAL PROFILE OWNER -->
 <div class="modal-overlay" id="profileOverlay">
   <div class="modal profile-modal">
@@ -447,7 +430,6 @@
 <script src="product.js"></script>
 <script src="testimoni.js"></script>
 <script src="PROMOSI/websiteApp.js"></script>
-<script src="chatown.js"></script>
 <script src="blacklist.js"></script>
 <script src="main.js"></script>
 <script src="follow.js"></script>
@@ -455,7 +437,7 @@
 /* Buka popup sesuai ?open= (dipakai menu di halaman Top Up) */
 (function(){
   var o=new URLSearchParams(location.search).get("open"); if(!o) return;
-  var m={website:"websiteNavBtn",blacklist:"blacklistNavBtn",chat:"chatNavBtn",profile:"profileNavBtn"};
+  var m={website:"websiteNavBtn",blacklist:"blacklistNavBtn",setting:"appNavBtn",profile:"profileNavBtn"};
   var b=document.getElementById(m[o]);
   if(b) setTimeout(function(){ b.click(); },80);
   history.replaceState(null,"",location.pathname);

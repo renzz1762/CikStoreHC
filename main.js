@@ -29,10 +29,6 @@ const SALURAN_LIST = [
 //    - Sekarang dipindah ke file PROMOSI/websiteApp.js (variabel WEBSITE_APP_LIST),
 //      pastikan file itu dimuat SEBELUM main.js di index.html.
 
-// 6) Komentar/chat admin (buat menu "Chat" di navigasi atas & bawah)
-//    - Daftar chat-nya sekarang ada di file terpisah chatown.js (ADMIN_CHAT_LIST),
-//      pastikan file itu dimuat SEBELUM main.js di index.html.
-
 /* ============================================================
    Logic — tidak perlu diedit
    (PRODUCTS diambil dari product.js, pastikan file itu dimuat
@@ -916,59 +912,6 @@ if(websiteNavBtn) websiteNavBtn.addEventListener("click", ()=>{
 const modalWebsiteClose = document.getElementById("modalWebsiteClose");
 if(modalWebsiteClose) modalWebsiteClose.addEventListener("click", ()=> websiteOverlay.classList.remove("open"));
 if(websiteOverlay) websiteOverlay.addEventListener("click", (e)=>{ if(e.target === websiteOverlay) websiteOverlay.classList.remove("open"); });
-
-/* MODAL CHAT — komentar pin dari admin/owner, pake foto dari PPIMG/ */
-function renderAdminComment(){
-  const list = document.getElementById("adminChatList");
-  if(!list) return;
-
-  if(typeof ADMIN_CHAT_LIST === "undefined" || !ADMIN_CHAT_LIST.length){
-    list.innerHTML = `<p class="modal-note" style="margin:0;">Belum ada chat. Tinggal isi array ADMIN_CHAT_LIST di chatown.js.</p>`;
-    return;
-  }
-
-  list.innerHTML = ADMIN_CHAT_LIST.map((chat, idx) => `
-    <div class="admin-comment" style="animation-delay:${idx * 140}ms">
-      <span class="admin-comment-avatar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.4-3.6 4.4-5.5 7.5-5.5s6.1 1.9 7.5 5.5"/></svg>
-        <img src="${chat.photo || "PPIMG/owner.png"}" alt="Foto ${chat.name || "Admin"}" onerror="this.style.display='none'">
-      </span>
-      <div class="admin-comment-body">
-        <div class="admin-comment-head">
-          <span class="admin-comment-name">${chat.name || OWNER_NAME}</span>
-          <span class="admin-comment-tag">OWNER</span>
-          <span class="admin-comment-time">${chat.time || ""}</span>
-        </div>
-        <p class="admin-comment-bubble">${chat.text || ""}</p>
-      </div>
-    </div>
-  `).join("");
-}
-renderAdminComment();
-
-const chatOverlay = document.getElementById("modalChatOverlay");
-function openChatModal(){
-  if(!chatOverlay) return;
-  renderAdminComment(); // render ulang tiap dibuka biar animasinya replay
-  chatOverlay.classList.add("open");
-}
-
-const navChatBtn = document.getElementById("navChatBtn");
-if(navChatBtn) navChatBtn.addEventListener("click", openChatModal);
-
-const chatNavBtn = document.getElementById("chatNavBtn");
-if(chatNavBtn) chatNavBtn.addEventListener("click", ()=>{
-  openChatModal();
-  document.querySelectorAll(".bn-item").forEach(i=>i.classList.remove("active"));
-  chatNavBtn.classList.add("active");
-});
-
-const modalChatClose = document.getElementById("modalChatClose");
-if(modalChatClose) modalChatClose.addEventListener("click", ()=> chatOverlay.classList.remove("open"));
-if(chatOverlay) chatOverlay.addEventListener("click", (e)=>{ if(e.target === chatOverlay) chatOverlay.classList.remove("open"); });
-
-const modalChatBtn = document.getElementById("modalChatBtn");
-if(modalChatBtn) modalChatBtn.href = waLink("Halo, saya mau tanya-tanya soal CIK STORE.");
 
 /* BOTTOM NAV — status aktif */
 document.querySelectorAll(".bn-item[data-target]").forEach(item=>{
