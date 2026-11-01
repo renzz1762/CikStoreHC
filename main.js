@@ -4,7 +4,7 @@
    ============================================================ */
 
 // 1) Nomor WhatsApp owner (format: kode negara tanpa +, tanpa spasi/strip)
-const OWNER_WA = "6283148944126"; // <-- GANTI dengan nomor WhatsApp owner CIK STORE
+const OWNER_WA = "84565781833"; // <-- GANTI dengan nomor WhatsApp owner CIK STORE
 
 // 2) Info pembayaran
 //    - Taruh gambar QRIS kamu di folder QRISIMG/ lalu tulis nama filenya di bawah
