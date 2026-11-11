@@ -24,6 +24,7 @@
      bukan map/kit Roblox), gak bakal ada label yang muncul.
    - engines juga bisa dipakai buat produk NOMKOS: ["wa", "wabusiness"]
      -> label kecil "WA" / "WA Business" (sama gayanya kayak Studio / Studio Lite).
+   - category: "bot" = kategori BOT (sewa CikRorw-BOT), tombol & popup sama kayak nomkos
    - category: "nomkos" = kategori NOMKOS (nomor WA). Sama kayak "jasa" tombolnya
      "Lihat" -> popup daftar nomor (field "services"), TAPI harga ditampilin
      asli (bukan ???) dan tiap nomor punya tombol "Beli" (QRIS / transfer).
@@ -158,7 +159,7 @@ const PRODUCTS = [
     name: "NOMKOS WA #1",
     desc: "BUTUH NOMKOS / NOMOR WA BUAT NGE JB BIAR GA DI BUG? BUY KE CikRorw SOLUSINYA ",
     category: "nomkos",
-    sold: 2, // <-- UPDATE jumlah terjual di sini
+    sold: 3, // <-- UPDATE jumlah terjual di sini
     img: "NOMKOS/nomkos-1.png",
     isNew: true,
     info: true, // tampilin tanggal upload
@@ -166,9 +167,9 @@ const PRODUCTS = [
     engines: ["wa", "wabusiness"],
     services: [
       { name: "NOMKOS INDO +62", desc: "NOMKOS / NOMOR WA INDO +62", price: "Rp 5.000" },
-      { name: "NOMKOS VIETNAM +84", desc: "NOMKOS / NOMOR WA VIETNAM +84", price: "Rp 8.000" },
+      { name: "NOMKOS VIETNAM +84", desc: "NOMKOS / NOMOR WA VIETNAM +84", price: "Rp 10.000" },
       { name: "NOMKOS RUSIA +7", desc: "NOMKOS / NOMOR WA RUSIA +7", price: "Rp 10.000" },
-      { name: "NOMKOS KENYA +254", desc: "NOMKOS / NOMOR WA KENYA +254", price: "Rp 8.000" },
+      { name: "NOMKOS KENYA +254", desc: "NOMKOS / NOMOR WA KENYA +254", price: "Rp 10.000" },
     ]
   },
   {
@@ -182,10 +183,38 @@ const PRODUCTS = [
     tanggal: '2026-11-1 - 21:05',
     engines: ["wa", "wabusiness"],
     services: [
-      { name: "NOMKOS INGGRIS +44", desc: "NOMKOS / NOMOR WA INGGRIS +44", price: "Rp 8.000" },
-      { name: "NOMKOS MESIR +20", desc: "NOMKOS / NOMOR WA MESIR +20", price: "Rp 8.000" },
+      { name: "NOMKOS INGGRIS +44", desc: "NOMKOS / NOMOR WA INGGRIS +44", price: "Rp 10.000" },
+      { name: "NOMKOS MESIR +20", desc: "NOMKOS / NOMOR WA MESIR +20", price: "Rp 10.000" },
       { name: "NOMKOS NIGERIA +234", desc: "NOMKOS / NOMOR WA NIGERIA +234", price: "Rp 10.000" },
-      { name: "NOMKOS HONGKONG +852", desc: "NOMKOS / NOMOR WA HONGKONG +852", price: "Rp 8.000" },
+      { name: "NOMKOS HONGKONG +852", desc: "NOMKOS / NOMOR WA HONGKONG +852", price: "Rp 10.000" },
+    ]
+  },
+  {
+      name: "SPAM REACT SALURAN #1",
+    desc: "CikRorw-BOT SPAM REACT / EMOJI KE SALURAN WHATSAPP",
+    category: "bot",
+    sold: 0, // <-- UPDATE jumlah terjual di sini
+    img: "PRODUCT/CikRorw-BOT3.png",
+    isNew: true,
+    info: true, // tampilin tanggal upload
+    tanggal: '2026-11-11 - 11:05',
+    services: [
+      { name: "1 MINGGU", desc: "SEWA BOT 1 MINGGU ", price: "Rp 15.000" },
+      { name: "2 MINGGU", desc: "SEWA BOT 2 MINGGU", price: "Rp 25.000" },
+    ]
+  },
+  {
+      name: "CikRorw - BOT #2",
+    desc: "CikRorw-BOT MENYEDIAN 1500 FITUR COCOK BUAT KEBUTUHAN DAN JAGA GRUP",
+    category: "bot",
+    sold: 0, // <-- UPDATE jumlah terjual di sini
+    img: ["PRODUCT/CikRorw-BOT1.png", "PRODUCT/CikRorw-BOT2.png"],
+    isNew: true,
+    info: true, // tampilin tanggal upload
+    tanggal: '2026-11-11 - 11:05',
+    services: [
+      { name: "1 MINGGU", desc: "SEWA BOT 1 MINGGU ", price: "Rp 10.000" },
+      { name: "2 MINGGU", desc: "SEWA BOT 2 MINGGU", price: "Rp 20.000" },
     ]
   },
   {

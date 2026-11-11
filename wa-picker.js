@@ -6,7 +6,7 @@
    ============================================================ */
 const WA_NUMBERS = [
   { label: "Nomor Owner 1", code: "+62", num: "6283148944126" },
-  { label: "Nomor Owner 2", code: "+84", num: "84565781833" }
+  { label: "Nomor Owner 2", code: "+84", num: "84839347381" }
 ];
 
 (function(){

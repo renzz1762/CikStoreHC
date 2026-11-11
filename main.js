@@ -96,7 +96,7 @@ function slugifyKey(name){
 // kategori/produk-nya sendiri (CODE_PROMO_<KEY>), gak ikut kena walau
 // orang masukin kode promo umum. Tambahin nama kategori lain di sini
 // kalau perlu (harus sama persis kayak field "category" di product.js).
-const EXCLUDE_FROM_ALL_PROMO = ["bahan_map", "nomkos"];
+const EXCLUDE_FROM_ALL_PROMO = ["bahan_map", "nomkos", "bot"];
 
 // Cek promo mana yang berlaku buat 1 produk tertentu, dari SEMUA kode promo
 // yang lagi aktif (activePromos bisa isi banyak kode sekaligus). Kalau ada
@@ -160,7 +160,7 @@ function handleImgError(imgEl){
   imgEl.outerHTML = fallbackIcon;
 }
 
-const CATEGORY_LABELS = { script: "SCRIPT", bahan: "Bahan", bahan_map: "BAHAN MAP", kit: "KIT", CC: "COLORING HD", jasa: "JASA", nomkos: "NOMKOS" };
+const CATEGORY_LABELS = { script: "SCRIPT", bahan: "Bahan", bahan_map: "BAHAN MAP", kit: "KIT", CC: "COLORING HD", jasa: "JASA", nomkos: "NOMKOS", bot: "BOT" };
 
 // Banner "LIMITED" + "U" ala item Unique di Roblox — dipake di kartu produk
 // kalau field "limited" di product.js diisi true. Contoh produk di product.js:
@@ -479,7 +479,7 @@ function renderProducts(filter){
 
     const comingSoon = getComingSoonInfo(p);
     const promoPrice = getPromoPriceFor(p);
-    const isJasa = p.category === "jasa" || p.category === "nomkos"; // kartu tanpa harga tunggal, tombol "Lihat" -> popup daftar
+    const isJasa = p.category === "jasa" || p.category === "nomkos" || p.category === "bot"; // kartu tanpa harga tunggal, tombol "Lihat" -> popup daftar
     // Limited & Off Sale itu 2 status BEDA (liat getLimitedStatus), tapi dua-duanya
     // sama-sama bikin produk gak bisa dibeli. Status "upcoming" (belum masuk limitedDate)
     // beda sendiri: badge & catatan tanggalnya tetep MUNCUL, tapi MASIH BISA DIBELI.
@@ -548,7 +548,7 @@ function renderProducts(filter){
     btn.addEventListener("click", ()=>{
       if(btn.disabled) return;
       const product = PRODUCTS[btn.dataset.idx];
-      if(product.category === "jasa" || product.category === "nomkos") openServiceModal(product);
+      if(product.category === "jasa" || product.category === "nomkos" || product.category === "bot") openServiceModal(product);
       else openBuyModal(product);
     });
   });
@@ -604,7 +604,8 @@ buyOverlay.addEventListener("click", (e)=>{ if(e.target === buyOverlay) buyOverl
    gak pake QRIS/transfer soalnya harga & prosesnya nego lewat chat. */
 const jasaOverlay = document.getElementById("modalJasaOverlay");
 function openServiceModal(product){
-  const isNomkos = product.category === "nomkos";
+  const isBot = product.category === "bot";
+  const isNomkos = product.category === "nomkos" || isBot; // bot = sama kayak nomkos (harga asli + Order ke WA)
   document.getElementById("modalJasaName").textContent = product.name;
   document.getElementById("modalJasaDesc").textContent = product.desc || "";
 
@@ -641,12 +642,14 @@ function openServiceModal(product){
   const svcHead = jasaOverlay.querySelector(".pay-block h4");
   if(svcHead){
     const last = svcHead.lastChild;
-    if(last && last.nodeType === 3) last.textContent = isNomkos ? " Pilih nomor" : " Pilihan yang bisa di-order";
+    if(last && last.nodeType === 3) last.textContent = isBot ? " Pilih paket sewa" : isNomkos ? " Pilih nomor" : " Pilihan yang bisa di-order";
   }
   // catatan di bawah daftar: beda buat jasa vs nomkos
   const note = jasaOverlay.querySelector(".modal-note");
   if(note){
-    note.textContent = isNomkos
+    note.textContent = isBot
+      ? "Pilih paket sewa yang kamu mau lalu tekan \"Order\" — nanti diarahin ke WhatsApp buat lanjut proses & pembayaran ke owner."
+      : isNomkos
       ? "Pilih nomor yang kamu mau lalu tekan \"Order\" — nanti diarahin ke WhatsApp buat lanjut proses & pembayaran ke owner."
       : "Harga masih \"???\" karena nego langsung lewat chat. Tekan \"Order\" di layanan yang kamu mau, nanti diarahin ke WhatsApp buat tanya harga & lanjut prosesnya.";
   }
