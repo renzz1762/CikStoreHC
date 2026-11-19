@@ -159,7 +159,7 @@ const PRODUCTS = [
     name: "NOMKOS WA #1",
     desc: "BUTUH NOMKOS / NOMOR WA BUAT NGE JB BIAR GA DI BUG? BUY KE CikRorw SOLUSINYA ",
     category: "nomkos",
-    sold: 3, // <-- UPDATE jumlah terjual di sini
+    sold: 230, // <-- UPDATE jumlah terjual di sini
     img: "NOMKOS/nomkos-1.png",
     isNew: true,
     info: true, // tampilin tanggal upload
