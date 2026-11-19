@@ -21,7 +21,7 @@ const OWNER_PHOTO = "OWNERIMG/owner.png"; // <-- ganti nama file kalau beda
 // 4) Daftar saluran (dipakai di tombol "Saluran" atas)
 //    - icon boleh: "channel" atau "tiktok" (sudah disediain ikonnya), atau isi svg sendiri
 const SALURAN_LIST = [
-  { name: "Saluran WhatsApp", link: "https://whatsapp.com/channel/0029Vb5aoKwEwEjpsmaQol3A", icon: "channel" }, // <-- GANTI link
+  { name: "Saluran WhatsApp", link: "https://whatsapp.com/channel/0029VbE14YVCBtxIo8HENY2D", icon: "channel" }, // <-- GANTI link
   { name: "TikTok", link: "https://www.tiktok.com/@_cikrorw01", icon: "tiktok" } // <-- GANTI link
 ];
 
